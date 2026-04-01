@@ -1,53 +1,116 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta charset="UTF-8">
-<title>Telegram ID</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<style>
-body { font-family: Arial; text-align: center; margin-top: 50px; }
-h1 { font-size: 24px; }
-p { font-size: 20px; color: #333; }
-button { font-size: 18px; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram WebApp</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4efe6;
+      --card: rgba(255, 252, 247, 0.9);
+      --text: #1f1a17;
+      --muted: #6c625b;
+      --accent: #c55c2d;
+      --accent-hover: #ab4d23;
+      --shadow: 0 18px 40px rgba(82, 47, 25, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.9), transparent 35%),
+        linear-gradient(135deg, #efe2cf, #f7f0e7 45%, #e8d7c2);
+      color: var(--text);
+    }
+
+    .card {
+      width: min(100%, 420px);
+      padding: 28px;
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 16px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .status {
+      margin-top: 14px;
+      min-height: 22px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+  </style>
 </head>
 <body>
-<h1>Ваш Telegram ID:</h1>
-<p id="userId">Загрузка...</p>
-<button id="sendBtn">Отправить ID боту</button>
+  <main class="card">
+    <h1>WebApp для Telegram</h1>
+    <p>Нажмите кнопку, и бот отправит сообщение в чат через <code>web_app_data</code>.</p>
+    <button id="sendButton" type="button">Отправить сообщение боту</button>
+    <div class="status" id="status"></div>
+  </main>
 
-<script>
-const tg = window.Telegram.WebApp;
+  <script>
+    const tg = window.Telegram.WebApp;
+    const button = document.getElementById("sendButton");
+    const status = document.getElementById("status");
 
-// Обязательно инициализируем WebApp
-tg.expand();
+    tg.ready();
+    tg.expand();
 
-// Ждём, пока WebApp загрузит данные пользователя
-tg.onEvent('mainButtonClicked', () => {}); // нужно для инициализации
+    button.addEventListener("click", () => {
+      const payload = {
+        action: "send_message",
+        text: "Сообщение отправлено из WebApp."
+      };
 
-function updateUserId() {
-    const user = tg.initDataUnsafe.user;
-    if(user) {
-        document.getElementById('userId').textContent = user.id;
-    } else {
-        document.getElementById('userId').textContent = "Не удалось получить ID";
-    }
-}
-
-// Ждём пока WebApp полностью загрузится
-setTimeout(updateUserId, 100); // задержка, чтобы Telegram успел передать данные
-
-// Кнопка отправки ID
-document.getElementById('sendBtn').addEventListener('click', () => {
-    const user = tg.initDataUnsafe.user;
-    if(user) {
-        tg.sendData(`${user.id}`);
-        alert("ID отправлен боту!");
-    } else {
-        alert("ID недоступен");
-    }
-});
-</script>
+      tg.sendData(JSON.stringify(payload));
+      status.textContent = "Данные отправлены боту.";
+      tg.close();
+    });
+  </script>
 </body>
 </html>
