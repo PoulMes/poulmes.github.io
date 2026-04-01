@@ -1266,14 +1266,16 @@
 
     function markDirty(text = "Есть несохранённые изменения.") {
       state.dirty = true;
-      tg.MainButton.setText("????????? ? ????");
+      tg.MainButton.setText("Сохранить в боте");
       tg.MainButton.show();
       tg.MainButton.enable();
     }
 
     function clearDirty(text = "Изменений пока нет.") {
       state.dirty = false;
-      tg.MainButton.hide();
+      tg.MainButton.setText("Сохранить в боте");
+      tg.MainButton.show();
+      tg.MainButton.disable();
     }
 
     function setActiveTab(tabName) {
