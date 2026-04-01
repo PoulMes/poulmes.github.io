@@ -2,8 +2,15 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta charset="UTF-8">
 <title>Telegram ID</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+body { font-family: Arial; text-align: center; margin-top: 50px; }
+h1 { font-size: 24px; }
+p { font-size: 20px; color: #333; }
+button { font-size: 18px; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
+</style>
 </head>
 <body>
 <h1>Ваш Telegram ID:</h1>
@@ -12,12 +19,34 @@
 
 <script>
 const tg = window.Telegram.WebApp;
-const userId = tg.initDataUnsafe.user.id;
-document.getElementById('userId').textContent = userId;
 
+// Обязательно инициализируем WebApp
+tg.expand();
+
+// Ждём, пока WebApp загрузит данные пользователя
+tg.onEvent('mainButtonClicked', () => {}); // нужно для инициализации
+
+function updateUserId() {
+    const user = tg.initDataUnsafe.user;
+    if(user) {
+        document.getElementById('userId').textContent = user.id;
+    } else {
+        document.getElementById('userId').textContent = "Не удалось получить ID";
+    }
+}
+
+// Ждём пока WebApp полностью загрузится
+setTimeout(updateUserId, 100); // задержка, чтобы Telegram успел передать данные
+
+// Кнопка отправки ID
 document.getElementById('sendBtn').addEventListener('click', () => {
-    tg.sendData(`${userId}`); // отправка данных боту
-    alert("ID отправлен боту!");
+    const user = tg.initDataUnsafe.user;
+    if(user) {
+        tg.sendData(`${user.id}`);
+        alert("ID отправлен боту!");
+    } else {
+        alert("ID недоступен");
+    }
 });
 </script>
 </body>
