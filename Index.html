@@ -132,7 +132,7 @@
 
     .tabbar {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 16px;
     }
@@ -466,17 +466,13 @@
     </section>
 
     <nav class="tabbar" id="tabbar">
-      <button class="tab active" data-tab="today" type="button">Сегодня</button>
-      <button class="tab" data-tab="week" type="button">Неделя</button>
-      <button class="tab" data-tab="editor" type="button">Редактор дня</button>
+      <button class="tab active" data-tab="today" type="button">Текущее расписание</button>
       <button class="tab" data-tab="homework" type="button">Домашка</button>
       <button class="tab" data-tab="settings" type="button">Настройки</button>
     </nav>
 
     <section class="panel">
       <div class="screen active" id="screen-today"></div>
-      <div class="screen" id="screen-week"></div>
-      <div class="screen" id="screen-editor"></div>
       <div class="screen" id="screen-homework"></div>
       <div class="screen" id="screen-settings"></div>
     </section>
@@ -509,11 +505,18 @@
     ];
 
     const DEFAULT_SETTINGS = {
-      lesson_duration: 45,
-      break_duration: 10,
       notifications: true,
-      start_time: "08:30",
-      show_current_lesson: true
+      show_current_lesson: true,
+      lesson_times: [
+        { start: "08:30", end: "09:15" },
+        { start: "09:25", end: "10:10" },
+        { start: "10:20", end: "11:05" },
+        { start: "11:25", end: "12:10" },
+        { start: "12:20", end: "13:05" },
+        { start: "13:15", end: "14:00" },
+        { start: "14:10", end: "14:55" },
+        { start: "15:05", end: "15:50" }
+      ]
     };
 
     const DEFAULT_TEMPLATE = {
@@ -642,14 +645,56 @@
       return String(number).padStart(2, "0");
     }
 
-    function buildTimeSlotFromSettings(index, settings) {
-      const { hour, minute } = parseTimeString(settings.start_time);
-      const base = new Date();
-      base.setHours(hour, minute, 0, 0);
-      const offset = index * (Number(settings.lesson_duration) + Number(settings.break_duration));
-      const start = new Date(base.getTime() + offset * 60000);
-      const end = new Date(start.getTime() + Number(settings.lesson_duration) * 60000);
+    function defaultLessonTimes() {
+      return clone(DEFAULT_SETTINGS.lesson_times);
+    }
+
+    function normalizeLessonTimes(rawItems) {
+      if (!Array.isArray(rawItems)) {
+        return defaultLessonTimes();
+      }
+
+      const normalized = rawItems
+        .filter((item) => item && typeof item === "object")
+        .map((item) => {
+          const start = `${pad(parseTimeString(item.start).hour)}:${pad(parseTimeString(item.start).minute)}`;
+          const end = `${pad(parseTimeString(item.end).hour)}:${pad(parseTimeString(item.end).minute)}`;
+          return { start, end };
+        })
+        .filter((item) => item.start < item.end);
+
+      return normalized.length ? normalized : defaultLessonTimes();
+    }
+
+    function buildGeneratedTimeSlot(index) {
+      const lessonTimes = defaultLessonTimes();
+      if (index < lessonTimes.length) {
+        return `${lessonTimes[index].start}-${lessonTimes[index].end}`;
+      }
+
+      const last = lessonTimes[lessonTimes.length - 1];
+      let start = new Date();
+      let end = new Date();
+      const parsedLastStart = parseTimeString(last.start);
+      const parsedLastEnd = parseTimeString(last.end);
+      start.setHours(parsedLastStart.hour, parsedLastStart.minute, 0, 0);
+      end.setHours(parsedLastEnd.hour, parsedLastEnd.minute, 0, 0);
+      const duration = end.getTime() - start.getTime();
+
+      for (let cursor = lessonTimes.length; cursor <= index; cursor += 1) {
+        start = new Date(end.getTime() + 10 * 60000);
+        end = new Date(start.getTime() + duration);
+      }
+
       return `${pad(start.getHours())}:${pad(start.getMinutes())}-${pad(end.getHours())}:${pad(end.getMinutes())}`;
+    }
+
+    function buildTimeSlotFromSettings(index, settings) {
+      const lessonTimes = normalizeLessonTimes(settings.lesson_times);
+      if (index < lessonTimes.length) {
+        return `${lessonTimes[index].start}-${lessonTimes[index].end}`;
+      }
+      return buildGeneratedTimeSlot(index);
     }
 
     function escapeHtml(value) {
@@ -698,10 +743,43 @@
         .filter((item) => item.lesson);
     }
 
+    function normalizeSettings(rawSettings) {
+      const settings = {
+        ...clone(DEFAULT_SETTINGS),
+        ...(rawSettings || {})
+      };
+
+      if (Array.isArray(rawSettings?.lesson_times)) {
+        settings.lesson_times = normalizeLessonTimes(rawSettings.lesson_times);
+      } else {
+        const legacyDuration = Math.max(5, Number(rawSettings?.lesson_duration || 45));
+        const legacyBreak = Math.max(0, Number(rawSettings?.break_duration || 10));
+        const legacyStart = parseTimeString(rawSettings?.start_time || "08:30");
+        const lessonTimes = [];
+        let start = new Date();
+        start.setHours(legacyStart.hour, legacyStart.minute, 0, 0);
+
+        for (let index = 0; index < DEFAULT_SETTINGS.lesson_times.length; index += 1) {
+          const end = new Date(start.getTime() + legacyDuration * 60000);
+          lessonTimes.push({
+            start: `${pad(start.getHours())}:${pad(start.getMinutes())}`,
+            end: `${pad(end.getHours())}:${pad(end.getMinutes())}`
+          });
+          start = new Date(end.getTime() + legacyBreak * 60000);
+        }
+
+        settings.lesson_times = lessonTimes;
+      }
+
+      settings.notifications = Boolean(settings.notifications);
+      settings.show_current_lesson = Boolean(settings.show_current_lesson);
+      return settings;
+    }
+
     function ensureSnapshot() {
       const payload = decodePayload();
       const template = { ...clone(DEFAULT_TEMPLATE), ...(payload.template || {}) };
-      const settings = { ...clone(DEFAULT_SETTINGS), ...(payload.settings || {}) };
+      const settings = normalizeSettings(payload.settings || {});
       const weekDates = Array.isArray(payload.week_dates)
         ? payload.week_dates
         : buildWeekDates(payload.week_start || mondayOf(new Date()).toISOString().slice(0, 10));
@@ -862,44 +940,94 @@
 
     function renderTodayScreen() {
       const container = document.getElementById("screen-today");
-      const dayIso = state.snapshot.today;
+      const dayIso = state.selectedDay || state.snapshot.today;
       const lessons = state.snapshot.days[dayIso] || [];
       const homework = state.snapshot.homework[dayIso] || [];
+      const isToday = dayIso === state.snapshot.today;
 
       container.innerHTML = `
         <div class="section-head">
           <div>
-            <h2>Сегодня</h2>
-            <p class="hint">${escapeHtml(formatHumanDate(dayIso))}</p>
+            <h2>Текущее расписание</h2>
+            <p class="hint">${escapeHtml(formatHumanDate(dayIso))}. Здесь можно сразу редактировать уроки, статусы и порядок.</p>
           </div>
           <span class="pill">${lessons.length} уроков</span>
         </div>
         <div class="stack">
-          ${getCurrentLessonCard()}
+          ${isToday ? getCurrentLessonCard() : ""}
+          <div class="day-card">
+            <div class="grid-2">
+              <label>
+                День
+                <select id="scheduleDaySelect"></select>
+              </label>
+              <label>
+                Управление
+                <div class="button-row">
+                  <button class="ghost" id="resetScheduleDayButton" type="button">Взять из шаблона</button>
+                  <button class="action" id="addScheduleLessonButton" type="button">Добавить урок</button>
+                </div>
+              </label>
+            </div>
+          </div>
           <div class="day-card">
             <div class="section-head">
               <div>
-                <h2>Фактическое расписание</h2>
-                <p class="hint">Статусы и порядок уроков можно менять во вкладке "Редактор дня".</p>
+                <h2>Уроки дня</h2>
+                <p class="hint">Время берётся из настроек звонков. Если уроков больше, чем настроенных интервалов, новые слоты строятся автоматически.</p>
               </div>
             </div>
-            <div class="stack">
-              ${lessons.length ? lessons.map(renderLessonCard).join("") : '<div class="empty">На сегодня уроков нет.</div>'}
+            <div class="stack" id="scheduleLessonList">
+              ${lessons.length ? lessons.map((item, index) => renderEditorItem(item, index)).join("") : '<div class="empty">На выбранный день уроков нет.</div>'}
             </div>
           </div>
           <div class="homework-card">
             <div class="section-head">
               <div>
-                <h2>Домашка на сегодня</h2>
+                <h2>Домашка на день</h2>
                 <p class="hint">Домашка хранится отдельно от статуса урока и не пропадает при отмене.</p>
               </div>
             </div>
             <div class="stack">
-              ${homework.length ? homework.map(renderHomeworkCard).join("") : '<div class="empty">На сегодня домашка пустая.</div>'}
+              ${homework.length ? homework.map(renderHomeworkCard).join("") : '<div class="empty">На выбранный день домашка пустая.</div>'}
             </div>
           </div>
         </div>
       `;
+
+      const daySelect = document.getElementById("scheduleDaySelect");
+      daySelect.innerHTML = state.snapshot.week_dates.map((item) => `
+        <option value="${item}" ${item === dayIso ? "selected" : ""}>${escapeHtml(formatHumanDate(item))}</option>
+      `).join("");
+      daySelect.addEventListener("change", (event) => {
+        state.selectedDay = event.target.value;
+        renderTodayScreen();
+      });
+
+      document.getElementById("addScheduleLessonButton").addEventListener("click", () => {
+        state.snapshot.days[dayIso].push({
+          id: crypto.randomUUID(),
+          lesson: "Новый урок",
+          status: "added",
+          time: buildTimeSlotFromSettings(state.snapshot.days[dayIso].length, state.snapshot.settings)
+        });
+        refreshDay(dayIso);
+        markDirty("Черновик расписания обновлён.");
+      });
+
+      document.getElementById("resetScheduleDayButton").addEventListener("click", () => {
+        const weekdayKey = dateToWeekdayKey(dayIso);
+        state.snapshot.days[dayIso] = (state.snapshot.template[weekdayKey] || []).map((lesson, index) => ({
+          id: crypto.randomUUID(),
+          lesson,
+          status: "planned",
+          time: buildTimeSlotFromSettings(index, state.snapshot.settings)
+        }));
+        refreshDay(dayIso);
+        markDirty("День пересобран из шаблона.");
+      });
+
+      bindEditorItemEvents(dayIso, "#scheduleLessonList");
     }
 
     function renderWeekDayCard(dayIso) {
@@ -926,6 +1054,9 @@
 
     function renderWeekScreen() {
       const container = document.getElementById("screen-week");
+      if (!container) {
+        return;
+      }
       container.innerHTML = `
         <div class="section-head">
           <div>
@@ -977,13 +1108,11 @@
         state.snapshot.template
       );
       renderTodayScreen();
-      renderWeekScreen();
-      renderEditorScreen();
       updateSummaryStats();
     }
 
-    function bindEditorItemEvents(dayIso) {
-      document.querySelectorAll("#editorLessonList .editor-item").forEach((element) => {
+    function bindEditorItemEvents(dayIso, rootSelector = "#editorLessonList") {
+      document.querySelectorAll(`${rootSelector} .editor-item`).forEach((element) => {
         const index = Number(element.dataset.index);
         const lessonInput = element.querySelector('[data-field="lesson"]');
         const statusSelect = element.querySelector('[data-field="status"]');
@@ -1022,6 +1151,9 @@
 
     function renderEditorScreen() {
       const container = document.getElementById("screen-editor");
+      if (!container) {
+        return;
+      }
       const dayIso = state.selectedDay || state.snapshot.today;
       const lessons = state.snapshot.days[dayIso] || [];
 
@@ -1087,7 +1219,7 @@
         markDirty("День пересобран из шаблона недели.");
       });
 
-      bindEditorItemEvents(dayIso);
+      bindEditorItemEvents(dayIso, "#editorLessonList");
     }
 
     function renderHomeworkEditor(item, index) {
@@ -1237,30 +1369,21 @@
         );
       });
       renderTodayScreen();
-      renderWeekScreen();
-      renderEditorScreen();
       updateSummaryStats();
     }
 
+    function renderLessonTimeRow(slot, index) {
+      return `
+        <div class="row" data-time-index="${index}">
+          <span class="pill">${index + 1} урок</span>
+          <input type="time" value="${escapeAttribute(slot.start)}" data-time-field="start">
+          <input type="time" value="${escapeAttribute(slot.end)}" data-time-field="end">
+          <button class="danger" type="button" data-time-remove="${index}">Удалить</button>
+        </div>
+      `;
+    }
+
     function bindSettingsEvents() {
-      document.getElementById("lessonDurationInput").addEventListener("input", (event) => {
-        state.snapshot.settings.lesson_duration = Math.max(5, Number(event.target.value || 45));
-        recalculateAllTimes();
-        markDirty("Настройки уроков обновлены.");
-      });
-
-      document.getElementById("breakDurationInput").addEventListener("input", (event) => {
-        state.snapshot.settings.break_duration = Math.max(0, Number(event.target.value || 10));
-        recalculateAllTimes();
-        markDirty("Настройки перемен обновлены.");
-      });
-
-      document.getElementById("startTimeInput").addEventListener("input", (event) => {
-        state.snapshot.settings.start_time = event.target.value || "08:30";
-        recalculateAllTimes();
-        markDirty("Время начала уроков обновлено.");
-      });
-
       document.getElementById("notificationsInput").addEventListener("change", (event) => {
         state.snapshot.settings.notifications = event.target.checked;
         markDirty("Настройки уведомлений обновлены.");
@@ -1269,6 +1392,43 @@
       document.getElementById("showCurrentLessonInput").addEventListener("change", (event) => {
         state.snapshot.settings.show_current_lesson = event.target.checked;
         markDirty("Настройки отображения обновлены.");
+      });
+
+      document.getElementById("addLessonTimeButton").addEventListener("click", () => {
+        const lessonTimes = normalizeLessonTimes(state.snapshot.settings.lesson_times);
+        const nextSlot = lessonTimes.length
+          ? buildGeneratedTimeSlot(lessonTimes.length).split("-")
+          : ["08:30", "09:15"];
+        lessonTimes.push({ start: nextSlot[0], end: nextSlot[1] });
+        state.snapshot.settings.lesson_times = lessonTimes;
+        renderSettingsScreen();
+        recalculateAllTimes();
+        markDirty("Добавлен новый интервал звонков.");
+      });
+
+      document.querySelectorAll("[data-time-index]").forEach((row) => {
+        const index = Number(row.dataset.timeIndex);
+        row.querySelector('[data-time-field="start"]').addEventListener("input", (event) => {
+          state.snapshot.settings.lesson_times[index].start = event.target.value || "08:30";
+          recalculateAllTimes();
+          markDirty("Время начала урока обновлено.");
+        });
+        row.querySelector('[data-time-field="end"]').addEventListener("input", (event) => {
+          state.snapshot.settings.lesson_times[index].end = event.target.value || "09:15";
+          recalculateAllTimes();
+          markDirty("Время окончания урока обновлено.");
+        });
+      });
+
+      document.querySelectorAll("[data-time-remove]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const index = Number(button.dataset.timeRemove);
+          state.snapshot.settings.lesson_times.splice(index, 1);
+          state.snapshot.settings.lesson_times = normalizeLessonTimes(state.snapshot.settings.lesson_times);
+          renderSettingsScreen();
+          recalculateAllTimes();
+          markDirty("Интервал звонков удалён.");
+        });
       });
     }
 
@@ -1307,29 +1467,27 @@
       const container = document.getElementById("screen-settings");
       const settings = state.snapshot.settings;
       const template = state.snapshot.template;
+      const lessonTimes = normalizeLessonTimes(settings.lesson_times);
+      state.snapshot.settings.lesson_times = lessonTimes;
 
       container.innerHTML = `
         <div class="section-head">
           <div>
             <h2>Настройки и шаблон недели</h2>
-            <p class="hint">Меняйте общие параметры уроков и базовый шаблон, из которого бот собирает дни.</p>
+            <p class="hint">Здесь настраиваются звонки по каждому уроку отдельно и базовый шаблон недели.</p>
           </div>
         </div>
         <div class="stack">
           <div class="setting-card">
-            <div class="grid-3">
-              <label>
-                Длительность урока
-                <input id="lessonDurationInput" type="number" min="5" max="180" value="${escapeAttribute(String(settings.lesson_duration))}">
-              </label>
-              <label>
-                Перемена
-                <input id="breakDurationInput" type="number" min="0" max="90" value="${escapeAttribute(String(settings.break_duration))}">
-              </label>
-              <label>
-                Первый урок
-                <input id="startTimeInput" type="time" value="${escapeAttribute(settings.start_time)}">
-              </label>
+            <div class="section-head">
+              <div>
+                <h2>Звонки</h2>
+                <p class="hint">Для каждого урока задаётся своё время начала и конца.</p>
+              </div>
+              <button class="ghost" id="addLessonTimeButton" type="button">Добавить урок</button>
+            </div>
+            <div class="stack">
+              ${lessonTimes.map((slot, index) => renderLessonTimeRow(slot, index)).join("")}
             </div>
           </div>
           <div class="grid-2">
@@ -1368,8 +1526,6 @@
 
     function renderScreens() {
       renderTodayScreen();
-      renderWeekScreen();
-      renderEditorScreen();
       renderHomeworkScreen();
       renderSettingsScreen();
     }
@@ -1409,11 +1565,9 @@
           days: cleanedDays,
           homework: cleanedHomework,
           settings: {
-            lesson_duration: Number(state.snapshot.settings.lesson_duration),
-            break_duration: Number(state.snapshot.settings.break_duration),
             notifications: Boolean(state.snapshot.settings.notifications),
-            start_time: String(state.snapshot.settings.start_time || "08:30"),
-            show_current_lesson: Boolean(state.snapshot.settings.show_current_lesson)
+            show_current_lesson: Boolean(state.snapshot.settings.show_current_lesson),
+            lesson_times: normalizeLessonTimes(state.snapshot.settings.lesson_times)
           }
         }
       };
