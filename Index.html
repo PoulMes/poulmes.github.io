@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Telegram WebApp</title>
+  <title>Расписание + ДЗ</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4efe6;
-      --card: rgba(255, 252, 247, 0.9);
-      --text: #1f1a17;
-      --muted: #6c625b;
-      --accent: #c55c2d;
-      --accent-hover: #ab4d23;
-      --shadow: 0 18px 40px rgba(82, 47, 25, 0.16);
+      --bg: #f7f0e7;
+      --card: rgba(255, 252, 247, 0.88);
+      --card-strong: rgba(255, 252, 247, 0.97);
+      --text: #1f1814;
+      --muted: #6e6157;
+      --accent: #b74d23;
+      --accent-strong: #8d3815;
+      --accent-soft: rgba(183, 77, 35, 0.12);
+      --line: rgba(93, 66, 50, 0.12);
+      --ok: #2f7f5f;
+      --warn: #ad5e16;
+      --danger: #8e3440;
+      --shadow: 0 24px 64px rgba(78, 42, 19, 0.18);
+      --radius: 24px;
     }
 
     * {
@@ -24,93 +31,1425 @@
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      font-family: "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(255, 255, 255, 0.9), transparent 35%),
-        linear-gradient(135deg, #efe2cf, #f7f0e7 45%, #e8d7c2);
+      font-family: "Bahnschrift", "Trebuchet MS", sans-serif;
       color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(245, 192, 154, 0.34), transparent 25%),
+        linear-gradient(140deg, #efe0cd 0%, #f7f0e7 48%, #ead8c3 100%);
     }
 
-    .card {
-      width: min(100%, 420px);
-      padding: 28px;
-      border-radius: 24px;
+    .page {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .hero,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       background: var(--card);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
 
-    h1 {
-      margin: 0 0 12px;
-      font-size: 28px;
-      line-height: 1.1;
+    .hero {
+      overflow: hidden;
+      position: relative;
+      padding: 24px;
+      margin-bottom: 16px;
     }
 
-    p {
-      margin: 0 0 20px;
-      color: var(--muted);
-      line-height: 1.5;
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -60px auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(183, 77, 35, 0.14), transparent 70%);
+      pointer-events: none;
     }
 
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 16px;
-      padding: 16px 18px;
-      font-size: 16px;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--accent-strong);
+      font-size: 13px;
       font-weight: 700;
-      color: #fff;
-      background: var(--accent);
-      cursor: pointer;
-      transition: transform 0.15s ease, background 0.15s ease;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    button:hover {
-      background: var(--accent-hover);
+    h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 6vw, 44px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      max-width: 520px;
+    }
+
+    .hero p {
+      max-width: 600px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(93, 66, 50, 0.08);
+    }
+
+    .stat-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat strong {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .tabbar {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .tab {
+      border: 1px solid transparent;
+      border-radius: 18px;
+      padding: 14px 12px;
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--muted);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .tab.active {
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border-color: rgba(255, 255, 255, 0.35);
       transform: translateY(-1px);
     }
 
-    button:active {
-      transform: translateY(1px);
+    .panel {
+      padding: 18px;
+    }
+
+    .screen {
+      display: none;
+      animation: fade-in 0.22s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .hint {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .lesson-card,
+    .day-card,
+    .homework-card,
+    .template-card,
+    .setting-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--card-strong);
+      border: 1px solid var(--line);
+    }
+
+    .lesson-card.current {
+      background: linear-gradient(135deg, rgba(183, 77, 35, 0.16), rgba(255, 255, 255, 0.96));
+      border-color: rgba(183, 77, 35, 0.25);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .lesson-main,
+    .homework-main {
+      flex: 1 1 280px;
+    }
+
+    .lesson-title,
+    .homework-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .lesson-meta,
+    .homework-meta,
+    .small {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
     }
 
     .status {
-      margin-top: 14px;
-      min-height: 22px;
-      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 112px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      background: rgba(31, 24, 20, 0.08);
+    }
+
+    .status-planned { color: var(--muted); }
+    .status-was { color: var(--ok); background: rgba(47, 127, 95, 0.12); }
+    .status-cancelled { color: var(--danger); background: rgba(142, 52, 64, 0.12); }
+    .status-changed { color: var(--warn); background: rgba(173, 94, 22, 0.12); }
+    .status-added { color: var(--accent-strong); background: rgba(183, 77, 35, 0.12); }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
       color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid rgba(93, 66, 50, 0.15);
+      border-radius: 14px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(183, 77, 35, 0.4);
+      box-shadow: 0 0 0 4px rgba(183, 77, 35, 0.12);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button.action,
+    button.ghost,
+    button.danger {
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, opacity 0.16s ease, background 0.16s ease;
+    }
+
+    button.action {
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    }
+
+    button.ghost {
+      color: var(--accent-strong);
+      background: rgba(183, 77, 35, 0.1);
+    }
+
+    button.danger {
+      color: var(--danger);
+      background: rgba(142, 52, 64, 0.1);
+    }
+
+    button.action:hover,
+    button.ghost:hover,
+    button.danger:hover,
+    .tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .editor-item,
+    .template-item,
+    .homework-item {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(247, 240, 231, 0.7);
+      border: 1px solid rgba(93, 66, 50, 0.08);
+    }
+
+    .switch {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--line);
+    }
+
+    .switch input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .empty {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--muted);
+      text-align: center;
+      border: 1px dashed rgba(93, 66, 50, 0.18);
+    }
+
+    .footer-bar {
+      position: sticky;
+      bottom: 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(31, 24, 20, 0.9);
+      color: #fff;
+      box-shadow: 0 16px 42px rgba(31, 24, 20, 0.24);
+    }
+
+    .footer-status {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    @media (max-width: 760px) {
+      .stats,
+      .tabbar,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <h1>WebApp для Telegram</h1>
-    <p>Нажмите кнопку, и бот отправит сообщение в чат через <code>web_app_data</code>.</p>
-    <button id="sendButton" type="button">Отправить сообщение боту</button>
-    <div class="status" id="status"></div>
-  </main>
+  <div class="page">
+    <section class="hero">
+      <span class="eyebrow">School Planner</span>
+      <h1>Расписание + ДЗ</h1>
+      <p>Шаблон недели, фактические уроки по дням, домашка и настройки редактируются в одном мини-приложении. После сохранения бот обновляет свои внутренние структуры автоматически.</p>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">Неделя</span>
+          <strong id="weekLabel">-</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Сегодня</span>
+          <strong id="todayLabel">-</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Открытых ДЗ</span>
+          <strong id="openHomeworkCount">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabbar" id="tabbar">
+      <button class="tab active" data-tab="today" type="button">Сегодня</button>
+      <button class="tab" data-tab="week" type="button">Неделя</button>
+      <button class="tab" data-tab="editor" type="button">Редактор дня</button>
+      <button class="tab" data-tab="homework" type="button">Домашка</button>
+      <button class="tab" data-tab="settings" type="button">Настройки</button>
+    </nav>
+
+    <section class="panel">
+      <div class="screen active" id="screen-today"></div>
+      <div class="screen" id="screen-week"></div>
+      <div class="screen" id="screen-editor"></div>
+      <div class="screen" id="screen-homework"></div>
+      <div class="screen" id="screen-settings"></div>
+    </section>
+
+    <div class="footer-bar">
+      <div>
+        <div><strong>Сохранение в бот</strong></div>
+        <div class="footer-status" id="footerStatus">Изменений пока нет.</div>
+      </div>
+      <div class="button-row">
+        <button class="ghost" id="resetDraftButton" type="button">Сбросить черновик</button>
+        <button class="action" id="saveButton" type="button">Сохранить в боте</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const tg = window.Telegram.WebApp;
-    const button = document.getElementById("sendButton");
-    const status = document.getElementById("status");
-
     tg.ready();
     tg.expand();
 
-    button.addEventListener("click", () => {
-      const payload = {
-        action: "send_message",
-        text: "Сообщение отправлено из WebApp."
-      };
+    const WEEKDAY_KEYS = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday"
+    ];
 
+    const DEFAULT_SETTINGS = {
+      lesson_duration: 45,
+      break_duration: 10,
+      notifications: true,
+      start_time: "08:30",
+      show_current_lesson: true
+    };
+
+    const DEFAULT_TEMPLATE = {
+      monday: [],
+      tuesday: [],
+      wednesday: [],
+      thursday: [],
+      friday: [],
+      saturday: [],
+      sunday: []
+    };
+
+    const STATUS_LABELS = {
+      planned: "По плану",
+      was: "Прошёл",
+      cancelled: "Отменён",
+      changed: "Замена",
+      added: "Добавлен"
+    };
+
+    const state = {
+      raw: null,
+      snapshot: null,
+      activeTab: "today",
+      selectedDay: null,
+      selectedHomeworkDay: null,
+      dirty: false
+    };
+
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function decodeBase64Utf8(encoded) {
+      const binary = atob(encoded.replace(/-/g, "+").replace(/_/g, "/"));
+      const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+      return new TextDecoder("utf-8").decode(bytes);
+    }
+
+    function decodePayload() {
+      const hash = window.location.hash.replace(/^#/, "");
+      const params = new URLSearchParams(hash);
+      const encoded = params.get("app");
+      if (!encoded) {
+        return {
+          week_start: mondayOf(new Date()).toISOString().slice(0, 10),
+          week_dates: buildWeekDates(mondayOf(new Date()).toISOString().slice(0, 10)),
+          today: new Date().toISOString().slice(0, 10),
+          template: clone(DEFAULT_TEMPLATE),
+          days: {},
+          homework: {},
+          settings: clone(DEFAULT_SETTINGS),
+          labels: { weekdays: {}, statuses: clone(STATUS_LABELS) },
+          current_lesson: null
+        };
+      }
+
+      try {
+        const jsonText = decodeBase64Utf8(encoded);
+        return JSON.parse(jsonText);
+      } catch (error) {
+        console.error("Payload decode failed", error);
+        return {
+          week_start: mondayOf(new Date()).toISOString().slice(0, 10),
+          week_dates: buildWeekDates(mondayOf(new Date()).toISOString().slice(0, 10)),
+          today: new Date().toISOString().slice(0, 10),
+          template: clone(DEFAULT_TEMPLATE),
+          days: {},
+          homework: {},
+          settings: clone(DEFAULT_SETTINGS),
+          labels: { weekdays: {}, statuses: clone(STATUS_LABELS) },
+          current_lesson: null
+        };
+      }
+    }
+
+    function mondayOf(inputDate) {
+      const date = new Date(inputDate);
+      const day = date.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      date.setDate(date.getDate() + diff);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    }
+
+    function buildWeekDates(weekStart) {
+      const start = new Date(`${weekStart}T00:00:00`);
+      return Array.from({ length: 7 }, (_, index) => {
+        const next = new Date(start);
+        next.setDate(start.getDate() + index);
+        return next.toISOString().slice(0, 10);
+      });
+    }
+
+    function dateToWeekdayKey(dayIso) {
+      const parsed = new Date(`${dayIso}T12:00:00`);
+      const index = (parsed.getDay() + 6) % 7;
+      return WEEKDAY_KEYS[index];
+    }
+
+    function formatHumanDate(dayIso) {
+      return new Intl.DateTimeFormat("ru-RU", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      }).format(new Date(`${dayIso}T12:00:00`));
+    }
+
+    function formatWeekRange(weekStart) {
+      const dates = buildWeekDates(weekStart);
+      const start = new Date(`${dates[0]}T12:00:00`);
+      const end = new Date(`${dates[6]}T12:00:00`);
+      const formatter = new Intl.DateTimeFormat("ru-RU", {
+        day: "2-digit",
+        month: "2-digit"
+      });
+      return `${formatter.format(start)} - ${formatter.format(end)}`;
+    }
+
+    function parseTimeString(value) {
+      const [hour = "08", minute = "30"] = String(value || "08:30").split(":");
+      return { hour: Number(hour), minute: Number(minute) };
+    }
+
+    function pad(number) {
+      return String(number).padStart(2, "0");
+    }
+
+    function buildTimeSlotFromSettings(index, settings) {
+      const { hour, minute } = parseTimeString(settings.start_time);
+      const base = new Date();
+      base.setHours(hour, minute, 0, 0);
+      const offset = index * (Number(settings.lesson_duration) + Number(settings.break_duration));
+      const start = new Date(base.getTime() + offset * 60000);
+      const end = new Date(start.getTime() + Number(settings.lesson_duration) * 60000);
+      return `${pad(start.getHours())}:${pad(start.getMinutes())}-${pad(end.getHours())}:${pad(end.getMinutes())}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value);
+    }
+
+    function normalizeHomework(rawItems) {
+      if (!Array.isArray(rawItems)) {
+        return [];
+      }
+
+      return rawItems
+        .map((item) => ({
+          id: item.id || crypto.randomUUID(),
+          lesson: String(item.lesson || "").trim(),
+          task: String(item.task || "").trim(),
+          done: Boolean(item.done)
+        }))
+        .filter((item) => item.lesson || item.task);
+    }
+
+    function normalizeDay(rawItems, dayIso, settings, template) {
+      const items = Array.isArray(rawItems) && rawItems.length
+        ? rawItems
+        : (template[dateToWeekdayKey(dayIso)] || []).map((lesson) => ({
+            lesson,
+            status: "planned"
+          }));
+
+      return items
+        .map((item, index) => ({
+          id: item.id || crypto.randomUUID(),
+          lesson: String(item.lesson || "").trim(),
+          status: STATUS_LABELS[item.status] ? item.status : "planned",
+          time: buildTimeSlotFromSettings(index, settings)
+        }))
+        .filter((item) => item.lesson);
+    }
+
+    function ensureSnapshot() {
+      const payload = decodePayload();
+      const template = { ...clone(DEFAULT_TEMPLATE), ...(payload.template || {}) };
+      const settings = { ...clone(DEFAULT_SETTINGS), ...(payload.settings || {}) };
+      const weekDates = Array.isArray(payload.week_dates)
+        ? payload.week_dates
+        : buildWeekDates(payload.week_start || mondayOf(new Date()).toISOString().slice(0, 10));
+
+      const days = {};
+      const homework = {};
+
+      weekDates.forEach((dayIso) => {
+        days[dayIso] = normalizeDay(payload.days?.[dayIso], dayIso, settings, template);
+        homework[dayIso] = normalizeHomework(payload.homework?.[dayIso]);
+      });
+
+      state.raw = payload;
+      state.snapshot = {
+        week_start: payload.week_start || weekDates[0],
+        week_dates: weekDates,
+        today: payload.today || weekDates[0],
+        template,
+        days,
+        homework,
+        settings,
+        labels: payload.labels || { weekdays: {}, statuses: clone(STATUS_LABELS) },
+        current_lesson: payload.current_lesson || null
+      };
+      state.selectedDay = weekDates.includes(state.snapshot.today) ? state.snapshot.today : weekDates[0];
+      state.selectedHomeworkDay = weekDates.includes(state.snapshot.today) ? state.snapshot.today : weekDates[0];
+    }
+
+    function markDirty(text = "Есть несохранённые изменения.") {
+      state.dirty = true;
+      document.getElementById("footerStatus").textContent = text;
+      tg.MainButton.setText("Сохранить в боте");
+      tg.MainButton.show();
+      tg.MainButton.enable();
+    }
+
+    function clearDirty(text = "Изменений пока нет.") {
+      state.dirty = false;
+      document.getElementById("footerStatus").textContent = text;
+      tg.MainButton.hide();
+    }
+
+    function setActiveTab(tabName) {
+      state.activeTab = tabName;
+      document.querySelectorAll(".tab").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tabName);
+      });
+      document.querySelectorAll(".screen").forEach((screen) => {
+        screen.classList.toggle("active", screen.id === `screen-${tabName}`);
+      });
+    }
+
+    function updateSummaryStats() {
+      document.getElementById("weekLabel").textContent = formatWeekRange(state.snapshot.week_start);
+      document.getElementById("todayLabel").textContent = formatHumanDate(state.snapshot.today);
+      const openTasks = Object.values(state.snapshot.homework)
+        .flat()
+        .filter((item) => !item.done).length;
+      document.getElementById("openHomeworkCount").textContent = String(openTasks);
+    }
+
+    function parseInterval(interval) {
+      const [startText, endText] = String(interval || "").split("-");
+      if (!startText || !endText) {
+        return null;
+      }
+      const start = parseTimeString(startText);
+      const end = parseTimeString(endText);
+      return { start, end };
+    }
+
+    function computeCurrentLesson() {
+      if (!state.snapshot.settings.show_current_lesson) {
+        return null;
+      }
+
+      const todayIso = new Date().toISOString().slice(0, 10);
+      if (todayIso !== state.snapshot.today) {
+        return state.snapshot.current_lesson || null;
+      }
+
+      const lessons = state.snapshot.days[state.snapshot.today] || [];
+      const now = new Date();
+
+      for (const lesson of lessons) {
+        if (lesson.status === "cancelled") {
+          continue;
+        }
+        const interval = parseInterval(lesson.time);
+        if (!interval) {
+          continue;
+        }
+        const start = new Date();
+        start.setHours(interval.start.hour, interval.start.minute, 0, 0);
+        const end = new Date();
+        end.setHours(interval.end.hour, interval.end.minute, 0, 0);
+        if (start <= now && now < end) {
+          return lesson;
+        }
+      }
+
+      return null;
+    }
+
+    function renderLessonCard(item) {
+      return `
+        <div class="lesson-card">
+          <div class="row">
+            <div class="lesson-main">
+              <p class="lesson-title">${escapeHtml(item.lesson)}</p>
+              <p class="lesson-meta">${escapeHtml(item.time)}</p>
+            </div>
+            <span class="status status-${item.status}">${escapeHtml(STATUS_LABELS[item.status] || item.status)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomeworkCard(item) {
+      return `
+        <div class="lesson-card">
+          <div class="row">
+            <div class="homework-main">
+              <p class="homework-title">${escapeHtml(item.lesson)}</p>
+              <p class="homework-meta">${escapeHtml(item.task)}</p>
+            </div>
+            <span class="status ${item.done ? "status-was" : "status-planned"}">${item.done ? "Сделано" : "В работе"}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function getCurrentLessonCard() {
+      const current = computeCurrentLesson();
+      if (!current) {
+        return `
+          <div class="lesson-card">
+            <div class="lesson-main">
+              <p class="lesson-title">Сейчас нет активного урока</p>
+              <p class="lesson-meta">Бот покажет текущий урок, если он попадает в текущее время и не отменён.</p>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="lesson-card current">
+          <div class="row">
+            <div class="lesson-main">
+              <p class="lesson-title">${escapeHtml(current.lesson)}</p>
+              <p class="lesson-meta">Текущий урок по расписанию: ${escapeHtml(current.time)}</p>
+            </div>
+            <span class="status status-${current.status}">${escapeHtml(STATUS_LABELS[current.status] || current.status)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTodayScreen() {
+      const container = document.getElementById("screen-today");
+      const dayIso = state.snapshot.today;
+      const lessons = state.snapshot.days[dayIso] || [];
+      const homework = state.snapshot.homework[dayIso] || [];
+
+      container.innerHTML = `
+        <div class="section-head">
+          <div>
+            <h2>Сегодня</h2>
+            <p class="hint">${escapeHtml(formatHumanDate(dayIso))}</p>
+          </div>
+          <span class="pill">${lessons.length} уроков</span>
+        </div>
+        <div class="stack">
+          ${getCurrentLessonCard()}
+          <div class="day-card">
+            <div class="section-head">
+              <div>
+                <h2>Фактическое расписание</h2>
+                <p class="hint">Статусы и порядок уроков можно менять во вкладке "Редактор дня".</p>
+              </div>
+            </div>
+            <div class="stack">
+              ${lessons.length ? lessons.map(renderLessonCard).join("") : '<div class="empty">На сегодня уроков нет.</div>'}
+            </div>
+          </div>
+          <div class="homework-card">
+            <div class="section-head">
+              <div>
+                <h2>Домашка на сегодня</h2>
+                <p class="hint">Домашка хранится отдельно от статуса урока и не пропадает при отмене.</p>
+              </div>
+            </div>
+            <div class="stack">
+              ${homework.length ? homework.map(renderHomeworkCard).join("") : '<div class="empty">На сегодня домашка пустая.</div>'}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWeekDayCard(dayIso) {
+      const lessons = state.snapshot.days[dayIso] || [];
+      const homework = state.snapshot.homework[dayIso] || [];
+      const changedCount = lessons.filter((item) => item.status === "changed" || item.status === "added").length;
+      const cancelledCount = lessons.filter((item) => item.status === "cancelled").length;
+
+      return `
+        <div class="day-card">
+          <div class="section-head">
+            <div>
+              <h2>${escapeHtml(formatHumanDate(dayIso))}</h2>
+              <p class="hint">Изменений: ${changedCount}, отмен: ${cancelledCount}, домашки: ${homework.length}</p>
+            </div>
+            <span class="pill">${lessons.length} уроков</span>
+          </div>
+          <div class="stack">
+            ${lessons.length ? lessons.map(renderLessonCard).join("") : '<div class="empty">День пустой.</div>'}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWeekScreen() {
+      const container = document.getElementById("screen-week");
+      container.innerHTML = `
+        <div class="section-head">
+          <div>
+            <h2>Неделя</h2>
+            <p class="hint">Видно шаблон недели и фактические правки по каждому дню.</p>
+          </div>
+          <span class="pill">${escapeHtml(formatWeekRange(state.snapshot.week_start))}</span>
+        </div>
+        <div class="stack">
+          ${state.snapshot.week_dates.map((dayIso) => renderWeekDayCard(dayIso)).join("")}
+        </div>
+      `;
+    }
+
+    function renderEditorItem(item, index) {
+      return `
+        <div class="editor-item" data-index="${index}">
+          <div class="grid-2">
+            <label>
+              Предмет
+              <input type="text" value="${escapeAttribute(item.lesson)}" data-field="lesson">
+            </label>
+            <label>
+              Статус
+              <select data-field="status">
+                ${Object.entries(STATUS_LABELS).map(([value, label]) => `
+                  <option value="${value}" ${item.status === value ? "selected" : ""}>${escapeHtml(label)}</option>
+                `).join("")}
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <span class="small">Время: ${escapeHtml(item.time)}</span>
+            <div class="button-row">
+              <button class="ghost" type="button" data-move="up">Выше</button>
+              <button class="ghost" type="button" data-move="down">Ниже</button>
+              <button class="danger" type="button" data-remove="true">Удалить</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function refreshDay(dayIso) {
+      state.snapshot.days[dayIso] = normalizeDay(
+        state.snapshot.days[dayIso],
+        dayIso,
+        state.snapshot.settings,
+        state.snapshot.template
+      );
+      renderTodayScreen();
+      renderWeekScreen();
+      renderEditorScreen();
+      updateSummaryStats();
+    }
+
+    function bindEditorItemEvents(dayIso) {
+      document.querySelectorAll("#editorLessonList .editor-item").forEach((element) => {
+        const index = Number(element.dataset.index);
+        const lessonInput = element.querySelector('[data-field="lesson"]');
+        const statusSelect = element.querySelector('[data-field="status"]');
+
+        lessonInput.addEventListener("input", (event) => {
+          state.snapshot.days[dayIso][index].lesson = event.target.value;
+          markDirty("Изменения в расписании ещё не сохранены.");
+        });
+
+        statusSelect.addEventListener("change", (event) => {
+          state.snapshot.days[dayIso][index].status = event.target.value;
+          markDirty("Статус урока обновлён в черновике.");
+        });
+
+        element.querySelector('[data-remove="true"]').addEventListener("click", () => {
+          state.snapshot.days[dayIso].splice(index, 1);
+          refreshDay(dayIso);
+          markDirty("Урок удалён из черновика.");
+        });
+
+        element.querySelectorAll("[data-move]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const direction = button.dataset.move;
+            const nextIndex = direction === "up" ? index - 1 : index + 1;
+            if (nextIndex < 0 || nextIndex >= state.snapshot.days[dayIso].length) {
+              return;
+            }
+            const items = state.snapshot.days[dayIso];
+            [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
+            refreshDay(dayIso);
+            markDirty("Порядок уроков изменён.");
+          });
+        });
+      });
+    }
+
+    function renderEditorScreen() {
+      const container = document.getElementById("screen-editor");
+      const dayIso = state.selectedDay || state.snapshot.today;
+      const lessons = state.snapshot.days[dayIso] || [];
+
+      container.innerHTML = `
+        <div class="section-head">
+          <div>
+            <h2>Редактор дня</h2>
+            <p class="hint">Добавляйте, удаляйте, заменяйте и переставляйте уроки. Время пересчитывается автоматически.</p>
+          </div>
+          <span class="pill">${escapeHtml(formatHumanDate(dayIso))}</span>
+        </div>
+        <div class="stack">
+          <div class="day-card">
+            <div class="grid-2">
+              <label>
+                Выбранный день
+                <select id="editorDaySelect"></select>
+              </label>
+              <label>
+                Действие
+                <div class="button-row">
+                  <button class="ghost" id="resetDayButton" type="button">Взять из шаблона</button>
+                  <button class="action" id="addLessonButton" type="button">Добавить урок</button>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="stack" id="editorLessonList">
+            ${lessons.length ? lessons.map((item, index) => renderEditorItem(item, index)).join("") : '<div class="empty">Уроков нет. Можно добавить вручную или взять день из шаблона.</div>'}
+          </div>
+        </div>
+      `;
+
+      const daySelect = document.getElementById("editorDaySelect");
+      daySelect.innerHTML = state.snapshot.week_dates.map((item) => `
+        <option value="${item}" ${item === dayIso ? "selected" : ""}>${escapeHtml(formatHumanDate(item))}</option>
+      `).join("");
+      daySelect.addEventListener("change", (event) => {
+        state.selectedDay = event.target.value;
+        renderEditorScreen();
+      });
+
+      document.getElementById("addLessonButton").addEventListener("click", () => {
+        state.snapshot.days[dayIso].push({
+          id: crypto.randomUUID(),
+          lesson: "Новый урок",
+          status: "added",
+          time: buildTimeSlotFromSettings(state.snapshot.days[dayIso].length, state.snapshot.settings)
+        });
+        refreshDay(dayIso);
+        markDirty("Черновик дня обновлён.");
+      });
+
+      document.getElementById("resetDayButton").addEventListener("click", () => {
+        const weekdayKey = dateToWeekdayKey(dayIso);
+        state.snapshot.days[dayIso] = (state.snapshot.template[weekdayKey] || []).map((lesson, index) => ({
+          id: crypto.randomUUID(),
+          lesson,
+          status: "planned",
+          time: buildTimeSlotFromSettings(index, state.snapshot.settings)
+        }));
+        refreshDay(dayIso);
+        markDirty("День пересобран из шаблона недели.");
+      });
+
+      bindEditorItemEvents(dayIso);
+    }
+
+    function renderHomeworkEditor(item, index) {
+      return `
+        <div class="homework-item" data-index="${index}">
+          <div class="grid-2">
+            <label>
+              Предмет
+              <input type="text" value="${escapeAttribute(item.lesson)}" data-field="lesson">
+            </label>
+            <label>
+              Статус
+              <select data-field="done">
+                <option value="false" ${!item.done ? "selected" : ""}>Не сделано</option>
+                <option value="true" ${item.done ? "selected" : ""}>Сделано</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Задание
+            <textarea data-field="task">${escapeHtml(item.task)}</textarea>
+          </label>
+          <div class="row">
+            <span class="small">Привязка к дате сохраняется в боте автоматически.</span>
+            <button class="danger" type="button" data-remove="true">Удалить ДЗ</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function bindHomeworkEvents(dayIso) {
+      document.querySelectorAll("#homeworkList .homework-item").forEach((element) => {
+        const index = Number(element.dataset.index);
+        element.querySelector('[data-field="lesson"]').addEventListener("input", (event) => {
+          state.snapshot.homework[dayIso][index].lesson = event.target.value;
+          markDirty("Черновик домашки изменён.");
+        });
+        element.querySelector('[data-field="task"]').addEventListener("input", (event) => {
+          state.snapshot.homework[dayIso][index].task = event.target.value;
+          markDirty("Черновик домашки изменён.");
+        });
+        element.querySelector('[data-field="done"]').addEventListener("change", (event) => {
+          state.snapshot.homework[dayIso][index].done = event.target.value === "true";
+          renderTodayScreen();
+          updateSummaryStats();
+          markDirty("Статус домашки обновлён.");
+        });
+        element.querySelector('[data-remove="true"]').addEventListener("click", () => {
+          state.snapshot.homework[dayIso].splice(index, 1);
+          renderHomeworkScreen();
+          renderTodayScreen();
+          updateSummaryStats();
+          markDirty("Домашка удалена из черновика.");
+        });
+      });
+    }
+
+    function renderHomeworkScreen() {
+      const container = document.getElementById("screen-homework");
+      const dayIso = state.selectedHomeworkDay || state.snapshot.today;
+      const items = state.snapshot.homework[dayIso] || [];
+
+      container.innerHTML = `
+        <div class="section-head">
+          <div>
+            <h2>Домашка</h2>
+            <p class="hint">Домашка привязана к дате и уроку. Отмена урока не удаляет уже записанные задания.</p>
+          </div>
+          <span class="pill">${escapeHtml(formatHumanDate(dayIso))}</span>
+        </div>
+        <div class="stack">
+          <div class="homework-card">
+            <div class="grid-2">
+              <label>
+                День
+                <select id="homeworkDaySelect"></select>
+              </label>
+              <label>
+                Управление
+                <div class="button-row">
+                  <button class="action" id="addHomeworkButton" type="button">Добавить ДЗ</button>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="stack" id="homeworkList">
+            ${items.length ? items.map((item, index) => renderHomeworkEditor(item, index)).join("") : '<div class="empty">На выбранный день домашних заданий пока нет.</div>'}
+          </div>
+        </div>
+      `;
+
+      const select = document.getElementById("homeworkDaySelect");
+      select.innerHTML = state.snapshot.week_dates.map((item) => `
+        <option value="${item}" ${item === dayIso ? "selected" : ""}>${escapeHtml(formatHumanDate(item))}</option>
+      `).join("");
+      select.addEventListener("change", (event) => {
+        state.selectedHomeworkDay = event.target.value;
+        renderHomeworkScreen();
+      });
+
+      document.getElementById("addHomeworkButton").addEventListener("click", () => {
+        state.snapshot.homework[dayIso].push({
+          id: crypto.randomUUID(),
+          lesson: state.snapshot.days[dayIso]?.[0]?.lesson || "Новый предмет",
+          task: "Новое задание",
+          done: false
+        });
+        renderHomeworkScreen();
+        renderTodayScreen();
+        updateSummaryStats();
+        markDirty("Черновик домашки обновлён.");
+      });
+
+      bindHomeworkEvents(dayIso);
+    }
+
+    function renderTemplateDay(weekday, lessons) {
+      const title = state.snapshot.labels.weekdays?.[weekday] || weekday;
+      return `
+        <div class="template-item" data-weekday="${weekday}">
+          <div class="section-head">
+            <div>
+              <h2>${escapeHtml(title)}</h2>
+              <p class="hint">Базовый порядок уроков для этого дня.</p>
+            </div>
+            <button class="ghost" type="button" data-template-add="${weekday}">Добавить предмет</button>
+          </div>
+          <div class="stack">
+            ${(lessons.length ? lessons : [""]).map((lesson, index) => `
+              <div class="row" data-template-index="${index}">
+                <input type="text" value="${escapeAttribute(lesson)}" data-template-field="lesson">
+                <button class="danger" type="button" data-template-remove="${weekday}" data-template-index="${index}">Удалить</button>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function recalculateAllTimes() {
+      state.snapshot.week_dates.forEach((dayIso) => {
+        state.snapshot.days[dayIso] = normalizeDay(
+          state.snapshot.days[dayIso],
+          dayIso,
+          state.snapshot.settings,
+          state.snapshot.template
+        );
+      });
+      renderTodayScreen();
+      renderWeekScreen();
+      renderEditorScreen();
+      updateSummaryStats();
+    }
+
+    function bindSettingsEvents() {
+      document.getElementById("lessonDurationInput").addEventListener("input", (event) => {
+        state.snapshot.settings.lesson_duration = Math.max(5, Number(event.target.value || 45));
+        recalculateAllTimes();
+        markDirty("Настройки уроков обновлены.");
+      });
+
+      document.getElementById("breakDurationInput").addEventListener("input", (event) => {
+        state.snapshot.settings.break_duration = Math.max(0, Number(event.target.value || 10));
+        recalculateAllTimes();
+        markDirty("Настройки перемен обновлены.");
+      });
+
+      document.getElementById("startTimeInput").addEventListener("input", (event) => {
+        state.snapshot.settings.start_time = event.target.value || "08:30";
+        recalculateAllTimes();
+        markDirty("Время начала уроков обновлено.");
+      });
+
+      document.getElementById("notificationsInput").addEventListener("change", (event) => {
+        state.snapshot.settings.notifications = event.target.checked;
+        markDirty("Настройки уведомлений обновлены.");
+      });
+
+      document.getElementById("showCurrentLessonInput").addEventListener("change", (event) => {
+        state.snapshot.settings.show_current_lesson = event.target.checked;
+        markDirty("Настройки отображения обновлены.");
+      });
+    }
+
+    function bindTemplateEvents() {
+      document.querySelectorAll("[data-template-field='lesson']").forEach((input) => {
+        input.addEventListener("input", () => {
+          const container = input.closest("[data-weekday]");
+          const weekday = container.dataset.weekday;
+          const values = Array.from(container.querySelectorAll("[data-template-field='lesson']")).map((field) => field.value.trim());
+          state.snapshot.template[weekday] = values.filter(Boolean);
+          markDirty("Шаблон недели обновлён.");
+        });
+      });
+
+      document.querySelectorAll("[data-template-add]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const weekday = button.dataset.templateAdd;
+          state.snapshot.template[weekday].push("Новый предмет");
+          renderSettingsScreen();
+          markDirty("Предмет добавлен в шаблон недели.");
+        });
+      });
+
+      document.querySelectorAll("[data-template-remove]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const weekday = button.dataset.templateRemove;
+          const index = Number(button.dataset.templateIndex);
+          state.snapshot.template[weekday].splice(index, 1);
+          renderSettingsScreen();
+          markDirty("Предмет удалён из шаблона недели.");
+        });
+      });
+    }
+
+    function renderSettingsScreen() {
+      const container = document.getElementById("screen-settings");
+      const settings = state.snapshot.settings;
+      const template = state.snapshot.template;
+
+      container.innerHTML = `
+        <div class="section-head">
+          <div>
+            <h2>Настройки и шаблон недели</h2>
+            <p class="hint">Меняйте общие параметры уроков и базовый шаблон, из которого бот собирает дни.</p>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="setting-card">
+            <div class="grid-3">
+              <label>
+                Длительность урока
+                <input id="lessonDurationInput" type="number" min="5" max="180" value="${escapeAttribute(String(settings.lesson_duration))}">
+              </label>
+              <label>
+                Перемена
+                <input id="breakDurationInput" type="number" min="0" max="90" value="${escapeAttribute(String(settings.break_duration))}">
+              </label>
+              <label>
+                Первый урок
+                <input id="startTimeInput" type="time" value="${escapeAttribute(settings.start_time)}">
+              </label>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="switch">
+              <div>
+                <strong>Уведомления</strong>
+                <div class="small">Флаг хранится ботом и готов для дальнейших напоминаний.</div>
+              </div>
+              <input id="notificationsInput" type="checkbox" ${settings.notifications ? "checked" : ""}>
+            </div>
+            <div class="switch">
+              <div>
+                <strong>Показывать текущий урок</strong>
+                <div class="small">Бот будет вычислять текущий урок по времени и статусу.</div>
+              </div>
+              <input id="showCurrentLessonInput" type="checkbox" ${settings.show_current_lesson ? "checked" : ""}>
+            </div>
+          </div>
+          <div class="template-card">
+            <div class="section-head">
+              <div>
+                <h2>Шаблон недели</h2>
+                <p class="hint">Каждая строка — предмет. Пустые строки удаляются автоматически.</p>
+              </div>
+            </div>
+            <div class="stack" id="templateList">
+              ${WEEKDAY_KEYS.map((weekday) => renderTemplateDay(weekday, template[weekday] || [])).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+
+      bindSettingsEvents();
+      bindTemplateEvents();
+    }
+
+    function renderScreens() {
+      renderTodayScreen();
+      renderWeekScreen();
+      renderEditorScreen();
+      renderHomeworkScreen();
+      renderSettingsScreen();
+    }
+
+    function prepareSnapshotForSend() {
+      const cleanedDays = {};
+      const cleanedHomework = {};
+
+      state.snapshot.week_dates.forEach((dayIso) => {
+        cleanedDays[dayIso] = normalizeDay(
+          state.snapshot.days[dayIso],
+          dayIso,
+          state.snapshot.settings,
+          state.snapshot.template
+        ).map(({ id, lesson, status, time }) => ({ id, lesson: lesson.trim(), status, time }));
+
+        cleanedHomework[dayIso] = normalizeHomework(state.snapshot.homework[dayIso]).map((item) => ({
+          id: item.id,
+          lesson: item.lesson.trim(),
+          task: item.task.trim(),
+          done: Boolean(item.done)
+        }));
+      });
+
+      const cleanedTemplate = {};
+      WEEKDAY_KEYS.forEach((weekday) => {
+        cleanedTemplate[weekday] = (state.snapshot.template[weekday] || [])
+          .map((lesson) => String(lesson).trim())
+          .filter(Boolean);
+      });
+
+      return {
+        action: "save_week_snapshot",
+        snapshot: {
+          week_start: state.snapshot.week_start,
+          template: cleanedTemplate,
+          days: cleanedDays,
+          homework: cleanedHomework,
+          settings: {
+            lesson_duration: Number(state.snapshot.settings.lesson_duration),
+            break_duration: Number(state.snapshot.settings.break_duration),
+            notifications: Boolean(state.snapshot.settings.notifications),
+            start_time: String(state.snapshot.settings.start_time || "08:30"),
+            show_current_lesson: Boolean(state.snapshot.settings.show_current_lesson)
+          }
+        }
+      };
+    }
+
+    function saveToBot() {
+      const payload = prepareSnapshotForSend();
       tg.sendData(JSON.stringify(payload));
-      status.textContent = "Данные отправлены боту.";
+      clearDirty("Изменения отправлены боту.");
       tg.close();
+    }
+
+    function resetDraft() {
+      ensureSnapshot();
+      updateSummaryStats();
+      renderScreens();
+      clearDirty("Черновик сброшен до последнего состояния из бота.");
+    }
+
+    document.getElementById("tabbar").addEventListener("click", (event) => {
+      const button = event.target.closest(".tab");
+      if (!button) {
+        return;
+      }
+      setActiveTab(button.dataset.tab);
     });
+
+    document.getElementById("saveButton").addEventListener("click", saveToBot);
+    document.getElementById("resetDraftButton").addEventListener("click", resetDraft);
+    tg.MainButton.onClick(saveToBot);
+
+    ensureSnapshot();
+    updateSummaryStats();
+    renderScreens();
+    setActiveTab(state.activeTab);
+    clearDirty();
   </script>
 </body>
 </html>
