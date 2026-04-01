@@ -688,18 +688,6 @@
       <div class="screen" id="screen-settings"></div>
     </section>
 
-    <div class="footer-bar">
-      <div>
-        <div><strong>Сохранение в бот</strong></div>
-        <div class="footer-status" id="footerStatus">Изменений пока нет.</div>
-      </div>
-      <div class="button-row">
-        <button class="ghost" id="resetDraftButton" type="button">Сбросить черновик</button>
-        <button class="action" id="saveButton" type="button">Сохранить в боте</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
@@ -1110,8 +1098,6 @@
 
     function clearDirty(text = "Изменений пока нет.") {
       state.dirty = false;
-      document.getElementById("footerStatus").textContent = text;
-      tg.MainButton.hide();
     }
 
     function setActiveTab(tabName) {
@@ -2441,10 +2427,6 @@
       }
       setActiveTab(button.dataset.tab);
     });
-
-    document.getElementById("saveButton").addEventListener("click", saveToBot);
-    document.getElementById("resetDraftButton").addEventListener("click", resetDraft);
-    tg.MainButton.onClick(saveToBot);
 
     ensureSnapshot();
     updateSummaryStats();
