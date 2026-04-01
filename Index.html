@@ -132,7 +132,7 @@
 
     .tabbar {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 16px;
     }
@@ -336,6 +336,238 @@
       flex-wrap: wrap;
     }
 
+    .day-switcher {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--line);
+    }
+
+    .day-arrow {
+      width: 46px;
+      height: 46px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(183, 77, 35, 0.12);
+      color: var(--accent-strong);
+      font: inherit;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .day-arrow:disabled {
+      opacity: 0.36;
+      cursor: default;
+    }
+
+    .day-switcher-meta {
+      flex: 1;
+      text-align: center;
+    }
+
+    .day-switcher-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lesson-shell {
+      display: grid;
+      gap: 10px;
+    }
+
+    .dragging {
+      opacity: 0.48;
+    }
+
+    .drag-handle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(183, 77, 35, 0.1);
+      color: var(--accent-strong);
+      font-size: 20px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .lesson-homework {
+      display: grid;
+      gap: 10px;
+      padding-top: 6px;
+    }
+
+    .homework-mini {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(93, 66, 50, 0.08);
+    }
+
+    .compact-schedule {
+      display: grid;
+      gap: 8px;
+      height: clamp(320px, calc(100vh - 240px), 720px);
+      overflow: auto;
+      padding: 6px 4px 6px 0;
+      align-content: start;
+    }
+
+    .compact-schedule.future .compact-item {
+      opacity: 1;
+    }
+
+    .compact-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(93, 66, 50, 0.08);
+      opacity: 0.34;
+    }
+
+    .compact-item.active {
+      opacity: 1;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(247, 225, 208, 0.92));
+      border-color: rgba(183, 77, 35, 0.18);
+    }
+
+    .compact-item.current {
+      opacity: 1;
+    }
+
+    .compact-item-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .compact-item-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .compact-item-details {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(93, 66, 50, 0.08);
+    }
+
+    .compact-item.current .compact-item-details {
+      border-top-color: rgba(183, 77, 35, 0.18);
+    }
+
+    .slot-editor {
+      display: grid;
+      gap: 10px;
+    }
+
+    .slot-editor-item {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(93, 66, 50, 0.08);
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .slot-editor-item.empty {
+      background: rgba(255, 255, 255, 0.58);
+    }
+
+    .slot-editor-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .slot-editor-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .slot-editor-empty {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .settings-menu {
+      display: grid;
+      gap: 14px;
+    }
+
+    .settings-nav {
+      width: 100%;
+      border: 1px solid rgba(183, 77, 35, 0.12);
+      border-radius: 22px;
+      padding: 18px 20px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.24), transparent 34%),
+        linear-gradient(135deg, #bc5428 0%, #9f4119 100%);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 18px 34px rgba(132, 54, 22, 0.18);
+    }
+
+    .settings-nav-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .settings-nav-title {
+      display: block;
+      font-size: 18px;
+      line-height: 1.15;
+    }
+
+    .settings-nav-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .settings-nav-text {
+      display: block;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .settings-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
     button.action,
     button.ghost,
     button.danger {
@@ -431,6 +663,7 @@
     @media (max-width: 760px) {
       .stats,
       .tabbar,
+      .settings-menu,
       .grid-2,
       .grid-3 {
         grid-template-columns: 1fr;
@@ -445,35 +678,13 @@
 </head>
 <body>
   <div class="page">
-    <section class="hero">
-      <span class="eyebrow">School Planner</span>
-      <h1>Расписание + ДЗ</h1>
-      <p>Шаблон недели, фактические уроки по дням, домашка и настройки редактируются в одном мини-приложении. После сохранения бот обновляет свои внутренние структуры автоматически.</p>
-      <div class="stats">
-        <div class="stat">
-          <span class="stat-label">Неделя</span>
-          <strong id="weekLabel">-</strong>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Сегодня</span>
-          <strong id="todayLabel">-</strong>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Открытых ДЗ</span>
-          <strong id="openHomeworkCount">0</strong>
-        </div>
-      </div>
-    </section>
-
     <nav class="tabbar" id="tabbar">
       <button class="tab active" data-tab="today" type="button">Текущее расписание</button>
-      <button class="tab" data-tab="homework" type="button">Домашка</button>
       <button class="tab" data-tab="settings" type="button">Настройки</button>
     </nav>
 
     <section class="panel">
       <div class="screen active" id="screen-today"></div>
-      <div class="screen" id="screen-homework"></div>
       <div class="screen" id="screen-settings"></div>
     </section>
 
@@ -507,6 +718,7 @@
     const DEFAULT_SETTINGS = {
       notifications: true,
       show_current_lesson: true,
+      subjects: [],
       lesson_times: [
         { start: "08:30", end: "09:15" },
         { start: "09:25", end: "10:10" },
@@ -541,8 +753,13 @@
       raw: null,
       snapshot: null,
       activeTab: "today",
+      activeSettingsTab: "menu",
       selectedDay: null,
-      selectedHomeworkDay: null,
+      draggedLessonId: null,
+      scheduleEditMode: false,
+      selectedCompactKey: null,
+      compactReturnTimer: null,
+      compactInputFocused: false,
       dirty: false
     };
 
@@ -636,6 +853,21 @@
       return `${formatter.format(start)} - ${formatter.format(end)}`;
     }
 
+    function dayIsoFromDate(date) {
+      return date.toISOString().slice(0, 10);
+    }
+
+    function getTomorrowIso(dayIso) {
+      const date = new Date(`${dayIso}T12:00:00`);
+      date.setDate(date.getDate() + 1);
+      return dayIsoFromDate(date);
+    }
+
+    function getScheduleDates() {
+      const todayIso = state.snapshot?.today || dayIsoFromDate(new Date());
+      return [todayIso, getTomorrowIso(todayIso)];
+    }
+
     function parseTimeString(value) {
       const [hour = "08", minute = "30"] = String(value || "08:30").split(":");
       return { hour: Number(hour), minute: Number(minute) };
@@ -718,6 +950,7 @@
       return rawItems
         .map((item) => ({
           id: item.id || crypto.randomUUID(),
+          lesson_id: String(item.lesson_id || "").trim(),
           lesson: String(item.lesson || "").trim(),
           task: String(item.task || "").trim(),
           done: Boolean(item.done)
@@ -726,21 +959,30 @@
     }
 
     function normalizeDay(rawItems, dayIso, settings, template) {
-      const items = Array.isArray(rawItems) && rawItems.length
+      const items = Array.isArray(rawItems)
         ? rawItems
-        : (template[dateToWeekdayKey(dayIso)] || []).map((lesson) => ({
-            lesson,
-            status: "planned"
+        : (template[dateToWeekdayKey(dayIso)] || []).map((lesson, index) => ({
+            lesson: typeof lesson === "object" ? lesson.lesson : lesson,
+            cabinet: typeof lesson === "object" ? lesson.cabinet : "",
+            status: "planned",
+            slot: index + 1
           }));
 
       return items
-        .map((item, index) => ({
-          id: item.id || crypto.randomUUID(),
-          lesson: String(item.lesson || "").trim(),
-          status: STATUS_LABELS[item.status] ? item.status : "planned",
-          time: buildTimeSlotFromSettings(index, settings)
-        }))
-        .filter((item) => item.lesson);
+        .map((item, index) => {
+          const parsedSlot = Number(item?.slot);
+          const slot = Number.isFinite(parsedSlot) && parsedSlot > 0 ? parsedSlot : index + 1;
+          return {
+            id: item.id || crypto.randomUUID(),
+            lesson: String(item.lesson || "").trim(),
+            cabinet: String(item.cabinet || "").trim(),
+            status: STATUS_LABELS[item.status] ? item.status : "planned",
+            slot,
+            time: buildTimeSlotFromSettings(slot - 1, settings)
+          };
+        })
+        .filter((item) => item.lesson)
+        .sort((left, right) => left.slot - right.slot || left.lesson.localeCompare(right.lesson));
     }
 
     function normalizeSettings(rawSettings) {
@@ -773,12 +1015,52 @@
 
       settings.notifications = Boolean(settings.notifications);
       settings.show_current_lesson = Boolean(settings.show_current_lesson);
+      settings.subjects = normalizeSubjects(settings.subjects);
       return settings;
+    }
+
+    function normalizeSubjects(rawItems) {
+      if (!Array.isArray(rawItems)) {
+        return [];
+      }
+
+      return rawItems
+        .filter((item) => item && typeof item === "object")
+        .map((item) => ({
+          name: String(item.name || "").trim(),
+          cabinet: String(item.cabinet || "").trim()
+        }))
+        .filter((item) => item.name);
+    }
+
+    function normalizeTemplateLessonEntry(rawItem) {
+      if (rawItem && typeof rawItem === "object") {
+        return {
+          lesson: String(rawItem.lesson || "").trim(),
+          cabinet: String(rawItem.cabinet || "").trim()
+        };
+      }
+
+      return {
+        lesson: String(rawItem || "").trim(),
+        cabinet: ""
+      };
+    }
+
+    function normalizeTemplate(rawTemplate) {
+      const template = clone(DEFAULT_TEMPLATE);
+      WEEKDAY_KEYS.forEach((weekday) => {
+        const items = Array.isArray(rawTemplate?.[weekday]) ? rawTemplate[weekday] : [];
+        template[weekday] = items
+          .map((item) => normalizeTemplateLessonEntry(item))
+          .filter((item) => item.lesson);
+      });
+      return template;
     }
 
     function ensureSnapshot() {
       const payload = decodePayload();
-      const template = { ...clone(DEFAULT_TEMPLATE), ...(payload.template || {}) };
+      const template = normalizeTemplate(payload.template || {});
       const settings = normalizeSettings(payload.settings || {});
       const weekDates = Array.isArray(payload.week_dates)
         ? payload.week_dates
@@ -792,11 +1074,22 @@
         homework[dayIso] = normalizeHomework(payload.homework?.[dayIso]);
       });
 
+      const todayIso = payload.today || dayIsoFromDate(new Date());
+      const tomorrowIso = getTomorrowIso(todayIso);
+      [todayIso, tomorrowIso].forEach((dayIso) => {
+        if (!days[dayIso]) {
+          days[dayIso] = normalizeDay(payload.days?.[dayIso], dayIso, settings, template);
+        }
+        if (!homework[dayIso]) {
+          homework[dayIso] = normalizeHomework(payload.homework?.[dayIso]);
+        }
+      });
+
       state.raw = payload;
       state.snapshot = {
         week_start: payload.week_start || weekDates[0],
         week_dates: weekDates,
-        today: payload.today || weekDates[0],
+        today: todayIso,
         template,
         days,
         homework,
@@ -804,8 +1097,7 @@
         labels: payload.labels || { weekdays: {}, statuses: clone(STATUS_LABELS) },
         current_lesson: payload.current_lesson || null
       };
-      state.selectedDay = weekDates.includes(state.snapshot.today) ? state.snapshot.today : weekDates[0];
-      state.selectedHomeworkDay = weekDates.includes(state.snapshot.today) ? state.snapshot.today : weekDates[0];
+      state.selectedDay = state.snapshot.today;
     }
 
     function markDirty(text = "Есть несохранённые изменения.") {
@@ -824,6 +1116,9 @@
 
     function setActiveTab(tabName) {
       state.activeTab = tabName;
+      if (tabName === "settings") {
+        state.activeSettingsTab = "menu";
+      }
       document.querySelectorAll(".tab").forEach((button) => {
         button.classList.toggle("active", button.dataset.tab === tabName);
       });
@@ -833,12 +1128,7 @@
     }
 
     function updateSummaryStats() {
-      document.getElementById("weekLabel").textContent = formatWeekRange(state.snapshot.week_start);
-      document.getElementById("todayLabel").textContent = formatHumanDate(state.snapshot.today);
-      const openTasks = Object.values(state.snapshot.homework)
-        .flat()
-        .filter((item) => !item.done).length;
-      document.getElementById("openHomeworkCount").textContent = String(openTasks);
+      return;
     }
 
     function parseInterval(interval) {
@@ -884,29 +1174,61 @@
       return null;
     }
 
+    function getCabinetByLessonName(lessonName) {
+      const match = (state.snapshot.settings.subjects || []).find(
+        (subject) => subject.name === lessonName
+      );
+      return match?.cabinet ? String(match.cabinet).trim() : "";
+    }
+
+    function getSubjectMeta(lessonName, cabinet = "") {
+      const actualCabinet = String(cabinet || "").trim() || getCabinetByLessonName(lessonName);
+      return actualCabinet ? `Кабинет: ${actualCabinet}` : "";
+    }
+
+    function getTemplateLessonsForDay(dayIso) {
+      const weekdayKey = dateToWeekdayKey(dayIso);
+      return state.snapshot.template[weekdayKey] || [];
+    }
+
+    function getTemplateBackedDay(dayIso) {
+      const weekdayKey = dateToWeekdayKey(dayIso);
+      return normalizeDay(
+        getTemplateLessonsForDay(dayIso).map((lesson, index) => ({
+          id: `template-${weekdayKey}-${index + 1}`,
+          lesson: typeof lesson === "object" ? lesson.lesson : lesson,
+          cabinet: typeof lesson === "object" ? lesson.cabinet : "",
+          status: "planned",
+          slot: index + 1
+        })),
+        dayIso,
+        state.snapshot.settings,
+        state.snapshot.template
+      );
+    }
+
+    function getDaySlotCount(dayIso) {
+      const lessonSlots = normalizeLessonTimes(state.snapshot.settings.lesson_times).length;
+      const existingMax = Math.max(
+        0,
+        ...getTemplateBackedDay(dayIso).map((item) => Number(item.slot) || 0)
+      );
+      return Math.max(lessonSlots, existingMax);
+    }
+
+    function getLessonBySlot(dayIso, slot) {
+      return getTemplateBackedDay(dayIso).find((item) => Number(item.slot) === slot) || null;
+    }
+
     function renderLessonCard(item) {
+      const subjectMeta = getSubjectMeta(item.lesson, item.cabinet);
       return `
         <div class="lesson-card">
           <div class="row">
             <div class="lesson-main">
               <p class="lesson-title">${escapeHtml(item.lesson)}</p>
-              <p class="lesson-meta">${escapeHtml(item.time)}</p>
+              <p class="lesson-meta">${escapeHtml(item.time)}${subjectMeta ? ` • ${escapeHtml(subjectMeta)}` : ""}</p>
             </div>
-            <span class="status status-${item.status}">${escapeHtml(STATUS_LABELS[item.status] || item.status)}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderHomeworkCard(item) {
-      return `
-        <div class="lesson-card">
-          <div class="row">
-            <div class="homework-main">
-              <p class="homework-title">${escapeHtml(item.lesson)}</p>
-              <p class="homework-meta">${escapeHtml(item.task)}</p>
-            </div>
-            <span class="status ${item.done ? "status-was" : "status-planned"}">${item.done ? "Сделано" : "В работе"}</span>
           </div>
         </div>
       `;
@@ -919,7 +1241,7 @@
           <div class="lesson-card">
             <div class="lesson-main">
               <p class="lesson-title">Сейчас нет активного урока</p>
-              <p class="lesson-meta">Бот покажет текущий урок, если он попадает в текущее время и не отменён.</p>
+              <p class="lesson-meta">Бот покажет текущий урок, если его время совпадает с текущим временем.</p>
             </div>
           </div>
         `;
@@ -932,7 +1254,272 @@
               <p class="lesson-title">${escapeHtml(current.lesson)}</p>
               <p class="lesson-meta">Текущий урок по расписанию: ${escapeHtml(current.time)}</p>
             </div>
-            <span class="status status-${current.status}">${escapeHtml(STATUS_LABELS[current.status] || current.status)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function getPreviousHomeworkForLesson(dayIso, lessonName) {
+      return Object.entries(state.snapshot.homework || {})
+        .filter(([sourceDay]) => sourceDay < dayIso)
+        .flatMap(([sourceDay, items]) => (items || []).map((item) => ({ ...item, source_day: sourceDay })))
+        .filter((item) => item.lesson === lessonName && String(item.task || "").trim())
+        .sort((left, right) => left.source_day.localeCompare(right.source_day))
+        .at(-1) || null;
+    }
+
+    function getOutgoingHomeworkForLesson(dayIso, lessonName, lessonId) {
+      return (state.snapshot.homework[dayIso] || []).find((item) => {
+        if (lessonId && item.lesson_id) {
+          return item.lesson_id === lessonId;
+        }
+        return item.lesson === lessonName;
+      }) || null;
+    }
+
+    function buildCompactScheduleSegments(dayIso) {
+      const lessons = getTemplateBackedDay(dayIso);
+      const now = new Date();
+      const isToday = dayIso === state.snapshot.today;
+      const segments = [];
+
+      lessons.forEach((lesson, index) => {
+        const lessonInterval = parseInterval(lesson.time);
+        const subjectMeta = getSubjectMeta(lesson.lesson, lesson.cabinet);
+        const lessonActive = isToday && lessonInterval && (() => {
+          const start = new Date();
+          start.setHours(lessonInterval.start.hour, lessonInterval.start.minute, 0, 0);
+          const end = new Date();
+          end.setHours(lessonInterval.end.hour, lessonInterval.end.minute, 0, 0);
+          return start <= now && now < end;
+        })();
+
+        segments.push({
+          key: `lesson-${lesson.id}`,
+          type: "lesson",
+          lessonId: lesson.id,
+          active: Boolean(lessonActive),
+          title: lesson.lesson || "Без предмета",
+          meta: `${lesson.time}${subjectMeta ? ` • ${subjectMeta}` : ""}`
+        });
+
+        const nextLesson = lessons[index + 1];
+        if (!nextLesson) {
+          return;
+        }
+
+        const nextInterval = parseInterval(nextLesson.time);
+        if (!lessonInterval || !nextInterval) {
+          return;
+        }
+
+        const currentEnd = new Date();
+        currentEnd.setHours(lessonInterval.end.hour, lessonInterval.end.minute, 0, 0);
+        const nextStart = new Date();
+        nextStart.setHours(nextInterval.start.hour, nextInterval.start.minute, 0, 0);
+        if (nextStart <= currentEnd) {
+          return;
+        }
+
+        const breakActive = isToday && currentEnd <= now && now < nextStart;
+        segments.push({
+          key: `break-${lesson.id}-${nextLesson.id}`,
+          type: "break",
+          beforeLessonId: lesson.id,
+          nextLessonId: nextLesson.id,
+          active: breakActive,
+          title: "Перемена",
+          meta: `${lessonInterval.end.hour.toString().padStart(2, "0")}:${lessonInterval.end.minute.toString().padStart(2, "0")} - ${nextInterval.start.hour.toString().padStart(2, "0")}:${nextInterval.start.minute.toString().padStart(2, "0")}`
+        });
+      });
+
+      return segments;
+    }
+
+    function getActiveCompactSegment(dayIso) {
+      return buildCompactScheduleSegments(dayIso).find((segment) => segment.active) || null;
+    }
+
+    function getSelectedCompactSegment(dayIso) {
+      const segments = buildCompactScheduleSegments(dayIso);
+      if (!segments.length) {
+        return null;
+      }
+
+      const selected = segments.find((segment) => segment.key === state.selectedCompactKey);
+      if (selected) {
+        return selected;
+      }
+
+      const active = segments.find((segment) => segment.active);
+      return active || segments[0];
+    }
+
+    function renderCompactSegmentContent(dayIso, segment) {
+      if (!segment) {
+        return "";
+      }
+
+      const isToday = dayIso === state.snapshot.today;
+
+      if (segment.type === "break") {
+        return `
+          <div class="compact-item-details">
+            <div class="homework-mini">
+              <p class="homework-title">\u041f\u0435\u0440\u0435\u043c\u0435\u043d\u0430</p>
+              <p class="homework-meta">${escapeHtml(segment.meta)}</p>
+            </div>
+          </div>
+        `;
+      }
+
+      const lesson = getTemplateBackedDay(dayIso).find((item) => item.id === segment.lessonId);
+      if (!lesson) {
+        return "";
+      }
+
+      const incomingHomework = getPreviousHomeworkForLesson(dayIso, lesson.lesson);
+      const outgoingHomework = getOutgoingHomeworkForLesson(dayIso, lesson.lesson, lesson.id);
+
+      return `
+        <div class="compact-item-details">
+          <div class="lesson-homework">
+            <div class="homework-mini">
+              <p class="homework-title">\u0414\u0417 \u043d\u0430 \u044d\u0442\u043e\u0442 \u0443\u0440\u043e\u043a</p>
+              <p class="homework-meta">${incomingHomework?.task ? escapeHtml(incomingHomework.task) : "\u041d\u0438\u0447\u0435\u0433\u043e \u043d\u0435 \u0437\u0430\u0434\u0430\u043d\u043e"}</p>
+            </div>
+            ${isToday ? `
+              <label>
+                \u0414\u0417 \u0441 \u044d\u0442\u043e\u0433\u043e \u0443\u0440\u043e\u043a\u0430
+                <textarea data-outgoing-homework="${escapeAttribute(lesson.id)}" placeholder="\u0427\u0442\u043e \u0437\u0430\u0434\u0430\u043b\u0438 \u043d\u0430 \u044d\u0442\u043e\u043c \u0443\u0440\u043e\u043a\u0435?">${escapeHtml(outgoingHomework?.task || "")}</textarea>
+              </label>
+            ` : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCompactSchedule(dayIso) {
+      const segments = buildCompactScheduleSegments(dayIso);
+      if (!segments.length) {
+        return "";
+      }
+
+      const selectedSegment = getSelectedCompactSegment(dayIso);
+      if (selectedSegment) {
+        state.selectedCompactKey = selectedSegment.key;
+      }
+
+      return `
+        <div class="compact-schedule ${dayIso === state.snapshot.today ? "today" : "future"}" id="compactSchedule">
+          ${segments.map((segment) => {
+            const isSelected = selectedSegment?.key === segment.key;
+            return `
+              <div class="compact-item ${segment.active ? "active" : ""} ${isSelected ? "current" : ""}" data-compact-key="${escapeAttribute(segment.key)}">
+                <p class="compact-item-title">${escapeHtml(segment.title)}</p>
+                <p class="compact-item-meta">${escapeHtml(segment.meta)}</p>
+                ${isSelected ? renderCompactSegmentContent(dayIso, segment) : ""}
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function scrollCompactScheduleToActive() {
+      const container = document.getElementById("compactSchedule");
+      const activeItem = container?.querySelector(".compact-item.current, .compact-item.active");
+      if (!container || !activeItem) {
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        container.scrollTop = Math.max(0, activeItem.offsetTop - 12);
+      });
+    }
+
+    function scheduleCompactReturn(dayIso) {
+      if (state.compactReturnTimer) {
+        clearTimeout(state.compactReturnTimer);
+      }
+
+      if (state.compactInputFocused || dayIso !== state.snapshot.today) {
+        return;
+      }
+
+      state.compactReturnTimer = setTimeout(() => {
+        const active = getActiveCompactSegment(dayIso);
+        state.selectedCompactKey = active?.key || null;
+        renderTodayScreen();
+      }, 5000);
+    }
+
+
+    function renderScheduleSlotRow(dayIso, slot) {
+      const item = getLessonBySlot(dayIso, slot);
+      const subjectNames = normalizeSubjects(state.snapshot.settings.subjects).map((subject) => subject.name);
+      const subjectMeta = item ? getSubjectMeta(item.lesson, item.cabinet) : "";
+      const hasSubjects = subjectNames.length > 0;
+      const slotTime = buildTimeSlotFromSettings(slot - 1, state.snapshot.settings);
+
+      if (!item) {
+        return `
+          <div class="slot-editor-item empty" data-slot-row="${slot}" data-slot="${slot}">
+            <div class="slot-editor-empty">
+              <div class="slot-editor-meta">
+                <span class="pill">${slot} урок</span>
+                <span class="small">${escapeHtml(slotTime)}</span>
+              </div>
+              <button class="ghost" type="button" data-slot-add="${slot}" ${hasSubjects ? "" : "disabled"}>Добавить урок</button>
+            </div>
+            <div class="small">${hasSubjects ? "Урока нет." : "Сначала добавьте предметы в настройках."}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="slot-editor-item filled" data-slot-row="${slot}" data-slot="${slot}" data-lesson-id="${item.id}" draggable="true">
+          <div class="row">
+            <div class="slot-editor-meta">
+              <span class="pill">${slot} урок</span>
+              <span class="small">${escapeHtml(slotTime)}</span>
+            </div>
+            <div class="slot-editor-actions">
+              <span class="drag-handle" title="Перетащить">\u22ee\u22ee</span>
+              <button class="danger" type="button" data-slot-remove="${slot}">Убрать</button>
+            </div>
+          </div>
+          <label>
+            Предмет
+            <select data-slot-lesson="${slot}">
+              <option value="">Выберите предмет</option>
+              ${subjectNames.map((name) => `<option value="${escapeAttribute(name)}" ${item.lesson === name ? "selected" : ""}>${escapeHtml(name)}</option>`).join("")}
+              ${item.lesson && !subjectNames.includes(item.lesson) ? `<option value="${escapeAttribute(item.lesson)}" selected>${escapeHtml(item.lesson)}</option>` : ""}
+            </select>
+          </label>
+          <label>
+            Кабинет
+            <input type="text" value="${escapeAttribute(item.cabinet || "")}" data-slot-cabinet="${slot}" placeholder="Кабинет">
+          </label>
+          <div class="small">${subjectMeta ? escapeHtml(subjectMeta) : "Кабинет не указан."}</div>
+        </div>
+      `;
+    }
+
+    function renderScheduleSlotEditor(dayIso) {
+      const slotCount = getDaySlotCount(dayIso);
+      if (!slotCount) {
+        return `
+          <div class="day-card">
+            <div class="empty">Сначала задайте расписание звонков в настройках.</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="day-card">
+          <div class="slot-editor" id="scheduleLessonList">
+            ${Array.from({ length: slotCount }, (_, index) => renderScheduleSlotRow(dayIso, index + 1)).join("")}
           </div>
         </div>
       `;
@@ -940,94 +1527,66 @@
 
     function renderTodayScreen() {
       const container = document.getElementById("screen-today");
-      const dayIso = state.selectedDay || state.snapshot.today;
-      const lessons = state.snapshot.days[dayIso] || [];
-      const homework = state.snapshot.homework[dayIso] || [];
+      const scheduleDates = getScheduleDates();
+      const selectedIndex = Math.max(0, scheduleDates.indexOf(state.selectedDay || state.snapshot.today));
+      const dayIso = scheduleDates[selectedIndex] || state.snapshot.today;
       const isToday = dayIso === state.snapshot.today;
+      const nextIndex = selectedIndex + 1;
+      const prevIndex = selectedIndex - 1;
 
       container.innerHTML = `
-        <div class="section-head">
-          <div>
-            <h2>Текущее расписание</h2>
-            <p class="hint">${escapeHtml(formatHumanDate(dayIso))}. Здесь можно сразу редактировать уроки, статусы и порядок.</p>
-          </div>
-          <span class="pill">${lessons.length} уроков</span>
-        </div>
         <div class="stack">
-          ${isToday ? getCurrentLessonCard() : ""}
-          <div class="day-card">
-            <div class="grid-2">
-              <label>
-                День
-                <select id="scheduleDaySelect"></select>
-              </label>
-              <label>
-                Управление
-                <div class="button-row">
-                  <button class="ghost" id="resetScheduleDayButton" type="button">Взять из шаблона</button>
-                  <button class="action" id="addScheduleLessonButton" type="button">Добавить урок</button>
-                </div>
-              </label>
+          <div class="day-switcher">
+            <div class="day-switcher-actions">
+              <button class="day-arrow" id="schedulePrevDay" type="button" ${prevIndex < 0 ? "disabled" : ""}>‹</button>
+            </div>
+            <div class="day-switcher-meta">
+              <strong>${escapeHtml(formatHumanDate(dayIso))}</strong>
+              <div class="small">${isToday ? "Сегодня" : "Завтра"}</div>
+            </div>
+            <div class="day-switcher-actions">
+              <button class="ghost" id="toggleScheduleEditButton" type="button">${state.scheduleEditMode ? "Готово" : "Редактировать"}</button>
+              <button class="day-arrow" id="scheduleNextDay" type="button" ${nextIndex >= scheduleDates.length ? "disabled" : ""}>›</button>
             </div>
           </div>
-          <div class="day-card">
-            <div class="section-head">
-              <div>
-                <h2>Уроки дня</h2>
-                <p class="hint">Время берётся из настроек звонков. Если уроков больше, чем настроенных интервалов, новые слоты строятся автоматически.</p>
-              </div>
-            </div>
-            <div class="stack" id="scheduleLessonList">
-              ${lessons.length ? lessons.map((item, index) => renderEditorItem(item, index)).join("") : '<div class="empty">На выбранный день уроков нет.</div>'}
-            </div>
-          </div>
-          <div class="homework-card">
-            <div class="section-head">
-              <div>
-                <h2>Домашка на день</h2>
-                <p class="hint">Домашка хранится отдельно от статуса урока и не пропадает при отмене.</p>
-              </div>
-            </div>
-            <div class="stack">
-              ${homework.length ? homework.map(renderHomeworkCard).join("") : '<div class="empty">На выбранный день домашка пустая.</div>'}
-            </div>
-          </div>
+          ${state.scheduleEditMode ? renderScheduleSlotEditor(dayIso) : `
+            ${renderCompactSchedule(dayIso)}
+          `}
         </div>
       `;
 
-      const daySelect = document.getElementById("scheduleDaySelect");
-      daySelect.innerHTML = state.snapshot.week_dates.map((item) => `
-        <option value="${item}" ${item === dayIso ? "selected" : ""}>${escapeHtml(formatHumanDate(item))}</option>
-      `).join("");
-      daySelect.addEventListener("change", (event) => {
-        state.selectedDay = event.target.value;
+      document.getElementById("schedulePrevDay").addEventListener("click", () => {
+        if (prevIndex < 0) {
+          return;
+        }
+        state.selectedDay = scheduleDates[prevIndex];
+        state.selectedCompactKey = null;
+        renderTodayScreen();
+      });
+      document.getElementById("scheduleNextDay").addEventListener("click", () => {
+        if (nextIndex >= scheduleDates.length) {
+          return;
+        }
+        state.selectedDay = scheduleDates[nextIndex];
+        state.selectedCompactKey = null;
+        renderTodayScreen();
+      });
+      document.getElementById("toggleScheduleEditButton").addEventListener("click", () => {
+        state.scheduleEditMode = !state.scheduleEditMode;
         renderTodayScreen();
       });
 
-      document.getElementById("addScheduleLessonButton").addEventListener("click", () => {
-        state.snapshot.days[dayIso].push({
-          id: crypto.randomUUID(),
-          lesson: "Новый урок",
-          status: "added",
-          time: buildTimeSlotFromSettings(state.snapshot.days[dayIso].length, state.snapshot.settings)
-        });
-        refreshDay(dayIso);
-        markDirty("Черновик расписания обновлён.");
-      });
+      if (state.scheduleEditMode) {
+        bindScheduleSlotEvents(dayIso);
+        bindScheduleDragAndDrop(dayIso);
+      } else {
+        bindHomeworkInlineEvents(dayIso);
+        bindCompactScheduleInteractions(dayIso);
+      }
 
-      document.getElementById("resetScheduleDayButton").addEventListener("click", () => {
-        const weekdayKey = dateToWeekdayKey(dayIso);
-        state.snapshot.days[dayIso] = (state.snapshot.template[weekdayKey] || []).map((lesson, index) => ({
-          id: crypto.randomUUID(),
-          lesson,
-          status: "planned",
-          time: buildTimeSlotFromSettings(index, state.snapshot.settings)
-        }));
-        refreshDay(dayIso);
-        markDirty("День пересобран из шаблона.");
-      });
-
-      bindEditorItemEvents(dayIso, "#scheduleLessonList");
+      if (isToday && !state.scheduleEditMode) {
+        scrollCompactScheduleToActive();
+      }
     }
 
     function renderWeekDayCard(dayIso) {
@@ -1088,6 +1647,10 @@
               </select>
             </label>
           </div>
+          <label>
+            Кабинет
+            <input type="text" value="${escapeAttribute(item.cabinet || "")}" data-field="cabinet" placeholder="Кабинет">
+          </label>
           <div class="row">
             <span class="small">Время: ${escapeHtml(item.time)}</span>
             <div class="button-row">
@@ -1115,22 +1678,32 @@
       document.querySelectorAll(`${rootSelector} .editor-item`).forEach((element) => {
         const index = Number(element.dataset.index);
         const lessonInput = element.querySelector('[data-field="lesson"]');
-        const statusSelect = element.querySelector('[data-field="status"]');
+        const cabinetInput = element.querySelector('[data-field="cabinet"]');
 
-        lessonInput.addEventListener("input", (event) => {
+        lessonInput.addEventListener("change", (event) => {
+          const previousLesson = state.snapshot.days[dayIso][index].lesson;
           state.snapshot.days[dayIso][index].lesson = event.target.value;
-          markDirty("Изменения в расписании ещё не сохранены.");
+          (state.snapshot.homework[dayIso] || []).forEach((entry) => {
+            if (entry.lesson_id && entry.lesson_id === state.snapshot.days[dayIso][index].id) {
+              entry.lesson = event.target.value;
+            } else if (!entry.lesson_id && entry.lesson === previousLesson) {
+              entry.lesson = event.target.value;
+            }
+          });
+          markDirty("\u0418\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u0432 \u0440\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0438 \u0435\u0449\u0451 \u043d\u0435 \u0441\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u044b.");
+          renderTodayScreen();
         });
 
-        statusSelect.addEventListener("change", (event) => {
-          state.snapshot.days[dayIso][index].status = event.target.value;
-          markDirty("Статус урока обновлён в черновике.");
+        cabinetInput?.addEventListener("input", (event) => {
+          state.snapshot.days[dayIso][index].cabinet = event.target.value;
+          markDirty("Кабинет обновлён.");
+          renderTodayScreen();
         });
 
         element.querySelector('[data-remove="true"]').addEventListener("click", () => {
           state.snapshot.days[dayIso].splice(index, 1);
           refreshDay(dayIso);
-          markDirty("Урок удалён из черновика.");
+          markDirty("\u0423\u0440\u043e\u043a \u0443\u0434\u0430\u043b\u0451\u043d \u0438\u0437 \u0447\u0435\u0440\u043d\u043e\u0432\u0438\u043a\u0430.");
         });
 
         element.querySelectorAll("[data-move]").forEach((button) => {
@@ -1143,8 +1716,219 @@
             const items = state.snapshot.days[dayIso];
             [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
             refreshDay(dayIso);
-            markDirty("Порядок уроков изменён.");
+            markDirty("\u041f\u043e\u0440\u044f\u0434\u043e\u043a \u0443\u0440\u043e\u043a\u043e\u0432 \u0438\u0437\u043c\u0435\u043d\u0451\u043d.");
           });
+        });
+      });
+    }
+
+    function bindHomeworkInlineEvents(dayIso) {
+      document.querySelectorAll("[data-outgoing-homework]").forEach((textarea) => {
+        ["mousedown", "click", "touchstart"].forEach((eventName) => {
+          textarea.addEventListener(eventName, (event) => {
+            event.stopPropagation();
+          });
+        });
+
+        textarea.addEventListener("focus", () => {
+          state.compactInputFocused = true;
+          if (state.compactReturnTimer) {
+            clearTimeout(state.compactReturnTimer);
+            state.compactReturnTimer = null;
+          }
+        });
+
+        textarea.addEventListener("blur", () => {
+          state.compactInputFocused = false;
+          scheduleCompactReturn(dayIso);
+        });
+
+        textarea.addEventListener("input", (event) => {
+          const lessonId = event.target.dataset.outgoingHomework;
+          const lesson = getTemplateBackedDay(dayIso).find((item) => item.id === lessonId);
+          if (!lesson) {
+            return;
+          }
+
+          const items = state.snapshot.homework[dayIso] || [];
+          const existing = items.find((entry) => {
+            if (entry.lesson_id) {
+              return entry.lesson_id === lessonId;
+            }
+            return entry.lesson === lesson.lesson;
+          });
+          const task = event.target.value;
+
+          if (!task.trim()) {
+            state.snapshot.homework[dayIso] = items.filter((entry) => {
+              if (entry.lesson_id) {
+                return entry.lesson_id !== lessonId;
+              }
+              return entry.lesson !== lesson.lesson;
+            });
+            markDirty("Домашка с урока очищена.");
+            return;
+          }
+
+          if (existing) {
+            existing.task = task;
+            existing.lesson = lesson.lesson;
+          } else {
+            items.push({
+              id: crypto.randomUUID(),
+              lesson_id: lessonId,
+              lesson: lesson.lesson,
+              task,
+              done: false
+            });
+            state.snapshot.homework[dayIso] = items;
+          }
+
+          markDirty("Домашка с урока обновлена.");
+        });
+      });
+    }
+
+    function bindScheduleSlotEvents(dayIso) {
+      document.querySelectorAll("[data-slot-add]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const slot = Number(button.dataset.slotAdd);
+          const firstSubject = normalizeSubjects(state.snapshot.settings.subjects)[0]?.name;
+          if (!firstSubject) {
+            return;
+          }
+
+          const templateLessons = getTemplateLessonsForDay(dayIso);
+          const insertIndex = Math.max(0, Math.min(templateLessons.length, slot - 1));
+          templateLessons.splice(insertIndex, 0, { lesson: firstSubject, cabinet: getCabinetByLessonName(firstSubject) });
+          renderTodayScreen();
+          markDirty("\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u0432\u043a\u043b\u0430\u0434\u043a\u0438 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0448\u0430\u0431\u043b\u043e\u043d\u0430.");
+        });
+      });
+
+      document.querySelectorAll("[data-slot-lesson]").forEach((select) => {
+        select.addEventListener("change", (event) => {
+          const slot = Number(event.target.dataset.slotLesson);
+          const lesson = getLessonBySlot(dayIso, slot);
+          if (!lesson) {
+            return;
+          }
+
+          const templateLessons = getTemplateLessonsForDay(dayIso);
+          const previousLesson = lesson.lesson;
+          templateLessons[slot - 1] = { ...normalizeTemplateLessonEntry(templateLessons[slot - 1]), lesson: event.target.value };
+          (state.snapshot.homework[dayIso] || []).forEach((entry) => {
+            if (entry.lesson_id && entry.lesson_id === lesson.id) {
+              entry.lesson = event.target.value;
+            } else if (!entry.lesson_id && entry.lesson === previousLesson) {
+              entry.lesson = event.target.value;
+            }
+          });
+
+          renderTodayScreen();
+          markDirty("\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u0432\u043a\u043b\u0430\u0434\u043a\u0438 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0448\u0430\u0431\u043b\u043e\u043d\u0430.");
+        });
+      });
+
+      document.querySelectorAll("[data-slot-cabinet]").forEach((input) => {
+        input.addEventListener("input", (event) => {
+          const slot = Number(event.target.dataset.slotCabinet);
+          const templateLessons = getTemplateLessonsForDay(dayIso);
+          templateLessons[slot - 1] = {
+            ...normalizeTemplateLessonEntry(templateLessons[slot - 1]),
+            cabinet: event.target.value
+          };
+          renderTodayScreen();
+          markDirty("\u041a\u0430\u0431\u0438\u043d\u0435\u0442 \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d.");
+        });
+      });
+
+      document.querySelectorAll("[data-slot-remove]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const slot = Number(button.dataset.slotRemove);
+          const lesson = getLessonBySlot(dayIso, slot);
+          if (!lesson) {
+            return;
+          }
+
+          const templateLessons = getTemplateLessonsForDay(dayIso);
+          templateLessons.splice(slot - 1, 1);
+          state.snapshot.homework[dayIso] = (state.snapshot.homework[dayIso] || []).filter(
+            (entry) => entry.lesson_id !== lesson.id
+          );
+          renderTodayScreen();
+          markDirty("\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u0432\u043a\u043b\u0430\u0434\u043a\u0438 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0448\u0430\u0431\u043b\u043e\u043d\u0430.");
+        });
+      });
+    }
+
+    function bindCompactScheduleInteractions(dayIso) {
+      const container = document.getElementById("compactSchedule");
+      if (!container) {
+        return;
+      }
+
+      container.querySelectorAll(".compact-item").forEach((item) => {
+        item.addEventListener("click", (event) => {
+          if (event.target.closest("textarea, input, select, label, button")) {
+            return;
+          }
+          state.selectedCompactKey = item.dataset.compactKey;
+          renderTodayScreen();
+          scheduleCompactReturn(dayIso);
+        });
+      });
+
+      const deferReturn = () => scheduleCompactReturn(dayIso);
+      container.addEventListener("wheel", deferReturn, { passive: true });
+      container.addEventListener("scroll", deferReturn, { passive: true });
+      container.addEventListener("touchmove", deferReturn, { passive: true });
+    }
+
+    function bindScheduleDragAndDrop(dayIso) {
+      const rows = document.querySelectorAll("#scheduleLessonList [data-slot-row]");
+      rows.forEach((element) => {
+        const lessonId = element.dataset.lessonId;
+
+        if (lessonId) {
+          element.addEventListener("dragstart", () => {
+            state.draggedLessonId = lessonId;
+            element.classList.add("dragging");
+          });
+
+          element.addEventListener("dragend", () => {
+            state.draggedLessonId = null;
+            element.classList.remove("dragging");
+          });
+        }
+
+        element.addEventListener("dragover", (event) => {
+          if (!state.draggedLessonId) {
+            return;
+          }
+          event.preventDefault();
+        });
+
+        element.addEventListener("drop", (event) => {
+          if (!state.draggedLessonId) {
+            return;
+          }
+          event.preventDefault();
+          const lessonItems = getTemplateBackedDay(dayIso);
+          const draggedLesson = lessonItems.find((item) => item.id === state.draggedLessonId);
+          const targetSlot = Number(element.dataset.slot);
+          if (!draggedLesson || !targetSlot || Number(draggedLesson.slot) === targetSlot) {
+            return;
+          }
+
+          const templateLessons = getTemplateLessonsForDay(dayIso);
+          const fromIndex = draggedLesson.slot - 1;
+          const toIndex = Math.max(0, Math.min(templateLessons.length - 1, targetSlot - 1));
+          const [movedLesson] = templateLessons.splice(fromIndex, 1);
+          templateLessons.splice(toIndex, 0, movedLesson);
+
+          renderTodayScreen();
+          markDirty("\u0420\u0430\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u0432\u043a\u043b\u0430\u0434\u043a\u0438 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0448\u0430\u0431\u043b\u043e\u043d\u0430.");
         });
       });
     }
@@ -1211,7 +1995,8 @@
         const weekdayKey = dateToWeekdayKey(dayIso);
         state.snapshot.days[dayIso] = (state.snapshot.template[weekdayKey] || []).map((lesson, index) => ({
           id: crypto.randomUUID(),
-          lesson,
+          lesson: normalizeTemplateLessonEntry(lesson).lesson,
+          cabinet: normalizeTemplateLessonEntry(lesson).cabinet,
           status: "planned",
           time: buildTimeSlotFromSettings(index, state.snapshot.settings)
         }));
@@ -1250,110 +2035,52 @@
       `;
     }
 
-    function bindHomeworkEvents(dayIso) {
-      document.querySelectorAll("#homeworkList .homework-item").forEach((element) => {
-        const index = Number(element.dataset.index);
-        element.querySelector('[data-field="lesson"]').addEventListener("input", (event) => {
-          state.snapshot.homework[dayIso][index].lesson = event.target.value;
-          markDirty("Черновик домашки изменён.");
-        });
-        element.querySelector('[data-field="task"]').addEventListener("input", (event) => {
-          state.snapshot.homework[dayIso][index].task = event.target.value;
-          markDirty("Черновик домашки изменён.");
-        });
-        element.querySelector('[data-field="done"]').addEventListener("change", (event) => {
-          state.snapshot.homework[dayIso][index].done = event.target.value === "true";
-          renderTodayScreen();
-          updateSummaryStats();
-          markDirty("Статус домашки обновлён.");
-        });
-        element.querySelector('[data-remove="true"]').addEventListener("click", () => {
-          state.snapshot.homework[dayIso].splice(index, 1);
-          renderHomeworkScreen();
-          renderTodayScreen();
-          updateSummaryStats();
-          markDirty("Домашка удалена из черновика.");
-        });
-      });
-    }
+    function renderTemplateLessonOptions(selectedLesson) {
+      const subjects = normalizeSubjects(state.snapshot.settings.subjects);
+      const subjectNames = subjects.map((subject) => subject.name);
+      const options = ['<option value="">Выберите предмет</option>'];
 
-    function renderHomeworkScreen() {
-      const container = document.getElementById("screen-homework");
-      const dayIso = state.selectedHomeworkDay || state.snapshot.today;
-      const items = state.snapshot.homework[dayIso] || [];
-
-      container.innerHTML = `
-        <div class="section-head">
-          <div>
-            <h2>Домашка</h2>
-            <p class="hint">Домашка привязана к дате и уроку. Отмена урока не удаляет уже записанные задания.</p>
-          </div>
-          <span class="pill">${escapeHtml(formatHumanDate(dayIso))}</span>
-        </div>
-        <div class="stack">
-          <div class="homework-card">
-            <div class="grid-2">
-              <label>
-                День
-                <select id="homeworkDaySelect"></select>
-              </label>
-              <label>
-                Управление
-                <div class="button-row">
-                  <button class="action" id="addHomeworkButton" type="button">Добавить ДЗ</button>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="stack" id="homeworkList">
-            ${items.length ? items.map((item, index) => renderHomeworkEditor(item, index)).join("") : '<div class="empty">На выбранный день домашних заданий пока нет.</div>'}
-          </div>
-        </div>
-      `;
-
-      const select = document.getElementById("homeworkDaySelect");
-      select.innerHTML = state.snapshot.week_dates.map((item) => `
-        <option value="${item}" ${item === dayIso ? "selected" : ""}>${escapeHtml(formatHumanDate(item))}</option>
-      `).join("");
-      select.addEventListener("change", (event) => {
-        state.selectedHomeworkDay = event.target.value;
-        renderHomeworkScreen();
+      subjectNames.forEach((name) => {
+        options.push(
+          `<option value="${escapeAttribute(name)}" ${selectedLesson === name ? "selected" : ""}>${escapeHtml(name)}</option>`
+        );
       });
 
-      document.getElementById("addHomeworkButton").addEventListener("click", () => {
-        state.snapshot.homework[dayIso].push({
-          id: crypto.randomUUID(),
-          lesson: state.snapshot.days[dayIso]?.[0]?.lesson || "Новый предмет",
-          task: "Новое задание",
-          done: false
-        });
-        renderHomeworkScreen();
-        renderTodayScreen();
-        updateSummaryStats();
-        markDirty("Черновик домашки обновлён.");
-      });
+      if (selectedLesson && !subjectNames.includes(selectedLesson)) {
+        options.push(
+          `<option value="${escapeAttribute(selectedLesson)}" selected>${escapeHtml(selectedLesson)}</option>`
+        );
+      }
 
-      bindHomeworkEvents(dayIso);
+      return options.join("");
     }
 
     function renderTemplateDay(weekday, lessons) {
       const title = state.snapshot.labels.weekdays?.[weekday] || weekday;
+      const hasSubjects = normalizeSubjects(state.snapshot.settings.subjects).length > 0;
       return `
         <div class="template-item" data-weekday="${weekday}">
           <div class="section-head">
             <div>
               <h2>${escapeHtml(title)}</h2>
-              <p class="hint">Базовый порядок уроков для этого дня.</p>
+              <p class="hint">Базовый порядок уроков для этого дня. Предметы берутся из раздела "Предметы".</p>
             </div>
-            <button class="ghost" type="button" data-template-add="${weekday}">Добавить предмет</button>
+            <button class="ghost" type="button" data-template-add="${weekday}" ${hasSubjects ? "" : "disabled"}>Добавить урок</button>
           </div>
           <div class="stack">
-            ${(lessons.length ? lessons : [""]).map((lesson, index) => `
-              <div class="row" data-template-index="${index}">
-                <input type="text" value="${escapeAttribute(lesson)}" data-template-field="lesson">
-                <button class="danger" type="button" data-template-remove="${weekday}" data-template-index="${index}">Удалить</button>
-              </div>
-            `).join("")}
+            ${!hasSubjects ? '<div class="empty">Сначала добавьте предметы в разделе "Предметы".</div>' : ""}
+            ${(hasSubjects ? (lessons.length ? lessons : [{ lesson: "", cabinet: "" }]) : []).map((lessonItem, index) => {
+              const lesson = normalizeTemplateLessonEntry(lessonItem);
+              return `
+                <div class="grid-2" data-template-index="${index}">
+                  <select data-template-field="lesson">
+                    ${renderTemplateLessonOptions(lesson.lesson)}
+                  </select>
+                  <input type="text" value="${escapeAttribute(lesson.cabinet)}" data-template-field="cabinet" placeholder="Кабинет">
+                  <button class="danger" type="button" data-template-remove="${weekday}" data-template-index="${index}">Удалить</button>
+                </div>
+              `;
+            }).join("")}
           </div>
         </div>
       `;
@@ -1383,28 +2110,133 @@
       `;
     }
 
+    function renderSubjectRow(subject, index) {
+      return `
+        <div class="row" data-subject-index="${index}">
+          <input type="text" value="${escapeAttribute(subject.name)}" data-subject-field="name" placeholder="Название предмета">
+          <input type="text" value="${escapeAttribute(subject.cabinet)}" data-subject-field="cabinet" placeholder="Кабинет">
+          <button class="danger" type="button" data-subject-remove="${index}">Удалить</button>
+        </div>
+      `;
+    }
+
+    function renderSettingsSection() {
+      const settings = state.snapshot.settings;
+      const template = state.snapshot.template;
+      const lessonTimes = normalizeLessonTimes(settings.lesson_times);
+      const subjects = normalizeSubjects(settings.subjects);
+      state.snapshot.settings.lesson_times = lessonTimes;
+      state.snapshot.settings.subjects = subjects;
+
+      if (state.activeSettingsTab === "menu") {
+        return `
+          <div class="settings-menu">
+            <button class="settings-nav" data-settings-open="bells" type="button">
+              <span class="settings-nav-top">
+                <span class="settings-nav-title">Расписание звонков</span>
+                <span class="settings-nav-arrow">›</span>
+              </span>
+              <span class="settings-nav-text">Отдельное время начала и конца для каждого урока.</span>
+            </button>
+            <button class="settings-nav" data-settings-open="subjects" type="button">
+              <span class="settings-nav-top">
+                <span class="settings-nav-title">Предметы</span>
+                <span class="settings-nav-arrow">›</span>
+              </span>
+              <span class="settings-nav-text">Название предмета и кабинет для быстрого выбора в расписании.</span>
+            </button>
+            <button class="settings-nav" data-settings-open="template" type="button">
+              <span class="settings-nav-top">
+                <span class="settings-nav-title">Шаблон расписания</span>
+                <span class="settings-nav-arrow">›</span>
+              </span>
+              <span class="settings-nav-text">Базовое расписание недели, собранное из списка предметов.</span>
+            </button>
+          </div>
+        `;
+      }
+
+      if (state.activeSettingsTab === "bells") {
+        return `
+          <div class="setting-card">
+            <button class="ghost settings-back" data-settings-back="menu" type="button">Назад</button>
+            <div class="section-head">
+              <div>
+                <h2>Расписание звонков</h2>
+                <p class="hint">Кнопкой ниже добавляется новый урок со своим временем начала и конца.</p>
+              </div>
+              <button class="ghost" id="addLessonTimeButton" type="button">+ Добавить урок</button>
+            </div>
+            <div class="stack">
+              ${lessonTimes.map((slot, index) => renderLessonTimeRow(slot, index)).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (state.activeSettingsTab === "subjects") {
+        return `
+          <div class="setting-card">
+            <button class="ghost settings-back" data-settings-back="menu" type="button">Назад</button>
+            <div class="section-head">
+              <div>
+                <h2>Предметы</h2>
+                <p class="hint">Здесь задаются название предмета и кабинет.</p>
+              </div>
+              <button class="ghost" id="addSubjectButton" type="button">+ Добавить предмет</button>
+            </div>
+            <div class="stack">
+              ${subjects.length ? subjects.map((subject, index) => renderSubjectRow(subject, index)).join("") : '<div class="empty">Список предметов пока пуст.</div>'}
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="template-card">
+          <button class="ghost settings-back" data-settings-back="menu" type="button">Назад</button>
+          <div class="section-head">
+            <div>
+              <h2>Шаблон расписания</h2>
+              <p class="hint">Все дни идут столбиком. Для каждого дня можно добавить урок рядом с названием.</p>
+            </div>
+          </div>
+          <div class="stack" id="templateList">
+            ${WEEKDAY_KEYS.map((weekday) => renderTemplateDay(weekday, template[weekday] || [])).join("")}
+          </div>
+        </div>
+      `;
+    }
+
     function bindSettingsEvents() {
-      document.getElementById("notificationsInput").addEventListener("change", (event) => {
-        state.snapshot.settings.notifications = event.target.checked;
-        markDirty("Настройки уведомлений обновлены.");
+      document.querySelectorAll("[data-settings-open]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeSettingsTab = button.dataset.settingsOpen;
+          renderSettingsScreen();
+        });
       });
 
-      document.getElementById("showCurrentLessonInput").addEventListener("change", (event) => {
-        state.snapshot.settings.show_current_lesson = event.target.checked;
-        markDirty("Настройки отображения обновлены.");
+      document.querySelectorAll("[data-settings-back]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeSettingsTab = button.dataset.settingsBack || "menu";
+          renderSettingsScreen();
+        });
       });
 
-      document.getElementById("addLessonTimeButton").addEventListener("click", () => {
-        const lessonTimes = normalizeLessonTimes(state.snapshot.settings.lesson_times);
-        const nextSlot = lessonTimes.length
-          ? buildGeneratedTimeSlot(lessonTimes.length).split("-")
-          : ["08:30", "09:15"];
-        lessonTimes.push({ start: nextSlot[0], end: nextSlot[1] });
-        state.snapshot.settings.lesson_times = lessonTimes;
-        renderSettingsScreen();
-        recalculateAllTimes();
-        markDirty("Добавлен новый интервал звонков.");
-      });
+      const addLessonTimeButton = document.getElementById("addLessonTimeButton");
+      if (addLessonTimeButton) {
+        addLessonTimeButton.addEventListener("click", () => {
+          const lessonTimes = normalizeLessonTimes(state.snapshot.settings.lesson_times);
+          const nextSlot = lessonTimes.length
+            ? buildGeneratedTimeSlot(lessonTimes.length).split("-")
+            : ["08:30", "09:15"];
+          lessonTimes.push({ start: nextSlot[0], end: nextSlot[1] });
+          state.snapshot.settings.lesson_times = lessonTimes;
+          renderSettingsScreen();
+          recalculateAllTimes();
+          markDirty("Добавлен новый интервал звонков.");
+        });
+      }
 
       document.querySelectorAll("[data-time-index]").forEach((row) => {
         const index = Number(row.dataset.timeIndex);
@@ -1430,15 +2262,51 @@
           markDirty("Интервал звонков удалён.");
         });
       });
+
+      const addSubjectButton = document.getElementById("addSubjectButton");
+      if (addSubjectButton) {
+        addSubjectButton.addEventListener("click", () => {
+          state.snapshot.settings.subjects.push({ name: "Новый предмет", cabinet: "" });
+          renderSettingsScreen();
+          markDirty("Предмет добавлен.");
+        });
+      }
+
+      document.querySelectorAll("[data-subject-index]").forEach((row) => {
+        const index = Number(row.dataset.subjectIndex);
+        row.querySelector('[data-subject-field="name"]').addEventListener("input", (event) => {
+          state.snapshot.settings.subjects[index].name = event.target.value;
+          markDirty("Список предметов обновлён.");
+        });
+        row.querySelector('[data-subject-field="cabinet"]').addEventListener("input", (event) => {
+          state.snapshot.settings.subjects[index].cabinet = event.target.value;
+          markDirty("Кабинет предмета обновлён.");
+        });
+      });
+
+      document.querySelectorAll("[data-subject-remove]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const index = Number(button.dataset.subjectRemove);
+          state.snapshot.settings.subjects.splice(index, 1);
+          state.snapshot.settings.subjects = normalizeSubjects(state.snapshot.settings.subjects);
+          renderSettingsScreen();
+          markDirty("Предмет удалён.");
+        });
+      });
     }
 
     function bindTemplateEvents() {
-      document.querySelectorAll("[data-template-field='lesson']").forEach((input) => {
-        input.addEventListener("input", () => {
-          const container = input.closest("[data-weekday]");
+      document.querySelectorAll("[data-template-field]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const container = input.closest(".template-item");
           const weekday = container.dataset.weekday;
-          const values = Array.from(container.querySelectorAll("[data-template-field='lesson']")).map((field) => field.value.trim());
-          state.snapshot.template[weekday] = values.filter(Boolean);
+          const rows = Array.from(container.querySelectorAll("[data-template-index]"));
+          state.snapshot.template[weekday] = rows
+            .map((row) => ({
+              lesson: String(row.querySelector('[data-template-field="lesson"]')?.value || "").trim(),
+              cabinet: String(row.querySelector('[data-template-field="cabinet"]')?.value || "").trim()
+            }))
+            .filter((item) => item.lesson);
           markDirty("Шаблон недели обновлён.");
         });
       });
@@ -1446,9 +2314,13 @@
       document.querySelectorAll("[data-template-add]").forEach((button) => {
         button.addEventListener("click", () => {
           const weekday = button.dataset.templateAdd;
-          state.snapshot.template[weekday].push("Новый предмет");
+          const firstSubject = normalizeSubjects(state.snapshot.settings.subjects)[0]?.name || "";
+          if (!firstSubject) {
+            return;
+          }
+          state.snapshot.template[weekday].push({ lesson: firstSubject, cabinet: getCabinetByLessonName(firstSubject) });
           renderSettingsScreen();
-          markDirty("Предмет добавлен в шаблон недели.");
+          markDirty("Урок добавлен в шаблон недели.");
         });
       });
 
@@ -1465,60 +2337,21 @@
 
     function renderSettingsScreen() {
       const container = document.getElementById("screen-settings");
-      const settings = state.snapshot.settings;
-      const template = state.snapshot.template;
-      const lessonTimes = normalizeLessonTimes(settings.lesson_times);
-      state.snapshot.settings.lesson_times = lessonTimes;
-
-      container.innerHTML = `
-        <div class="section-head">
-          <div>
-            <h2>Настройки и шаблон недели</h2>
-            <p class="hint">Здесь настраиваются звонки по каждому уроку отдельно и базовый шаблон недели.</p>
-          </div>
-        </div>
-        <div class="stack">
-          <div class="setting-card">
-            <div class="section-head">
-              <div>
-                <h2>Звонки</h2>
-                <p class="hint">Для каждого урока задаётся своё время начала и конца.</p>
-              </div>
-              <button class="ghost" id="addLessonTimeButton" type="button">Добавить урок</button>
-            </div>
-            <div class="stack">
-              ${lessonTimes.map((slot, index) => renderLessonTimeRow(slot, index)).join("")}
+      if (state.activeSettingsTab === "menu") {
+        container.innerHTML = `
+          <div class="section-head">
+            <div>
+              <h2>Настройки</h2>
+              <p class="hint">Выберите страницу настроек.</p>
             </div>
           </div>
-          <div class="grid-2">
-            <div class="switch">
-              <div>
-                <strong>Уведомления</strong>
-                <div class="small">Флаг хранится ботом и готов для дальнейших напоминаний.</div>
-              </div>
-              <input id="notificationsInput" type="checkbox" ${settings.notifications ? "checked" : ""}>
-            </div>
-            <div class="switch">
-              <div>
-                <strong>Показывать текущий урок</strong>
-                <div class="small">Бот будет вычислять текущий урок по времени и статусу.</div>
-              </div>
-              <input id="showCurrentLessonInput" type="checkbox" ${settings.show_current_lesson ? "checked" : ""}>
-            </div>
+          <div class="stack">
+            ${renderSettingsSection()}
           </div>
-          <div class="template-card">
-            <div class="section-head">
-              <div>
-                <h2>Шаблон недели</h2>
-                <p class="hint">Каждая строка — предмет. Пустые строки удаляются автоматически.</p>
-              </div>
-            </div>
-            <div class="stack" id="templateList">
-              ${WEEKDAY_KEYS.map((weekday) => renderTemplateDay(weekday, template[weekday] || [])).join("")}
-            </div>
-          </div>
-        </div>
-      `;
+        `;
+      } else {
+        container.innerHTML = renderSettingsSection();
+      }
 
       bindSettingsEvents();
       bindTemplateEvents();
@@ -1526,7 +2359,6 @@
 
     function renderScreens() {
       renderTodayScreen();
-      renderHomeworkScreen();
       renderSettingsScreen();
     }
 
@@ -1534,16 +2366,26 @@
       const cleanedDays = {};
       const cleanedHomework = {};
 
-      state.snapshot.week_dates.forEach((dayIso) => {
+      Object.keys(state.snapshot.days).forEach((dayIso) => {
         cleanedDays[dayIso] = normalizeDay(
           state.snapshot.days[dayIso],
           dayIso,
           state.snapshot.settings,
           state.snapshot.template
-        ).map(({ id, lesson, status, time }) => ({ id, lesson: lesson.trim(), status, time }));
+        ).map(({ id, lesson, cabinet, status, time, slot }) => ({
+          id,
+          lesson: lesson.trim(),
+          cabinet: String(cabinet || "").trim(),
+          status,
+          slot,
+          time
+        }));
+      });
 
+      Object.keys(state.snapshot.homework).forEach((dayIso) => {
         cleanedHomework[dayIso] = normalizeHomework(state.snapshot.homework[dayIso]).map((item) => ({
           id: item.id,
+          lesson_id: item.lesson_id || "",
           lesson: item.lesson.trim(),
           task: item.task.trim(),
           done: Boolean(item.done)
@@ -1553,8 +2395,12 @@
       const cleanedTemplate = {};
       WEEKDAY_KEYS.forEach((weekday) => {
         cleanedTemplate[weekday] = (state.snapshot.template[weekday] || [])
-          .map((lesson) => String(lesson).trim())
-          .filter(Boolean);
+          .map((lesson) => normalizeTemplateLessonEntry(lesson))
+          .filter((lesson) => lesson.lesson)
+          .map((lesson) => ({
+            lesson: lesson.lesson.trim(),
+            cabinet: lesson.cabinet.trim()
+          }));
       });
 
       return {
@@ -1567,7 +2413,8 @@
           settings: {
             notifications: Boolean(state.snapshot.settings.notifications),
             show_current_lesson: Boolean(state.snapshot.settings.show_current_lesson),
-            lesson_times: normalizeLessonTimes(state.snapshot.settings.lesson_times)
+            lesson_times: normalizeLessonTimes(state.snapshot.settings.lesson_times),
+            subjects: normalizeSubjects(state.snapshot.settings.subjects)
           }
         }
       };
@@ -1604,6 +2451,12 @@
     renderScreens();
     setActiveTab(state.activeTab);
     clearDirty();
+
+    setInterval(() => {
+      if (state.activeTab === "today" && !state.scheduleEditMode) {
+        renderTodayScreen();
+      }
+    }, 30000);
   </script>
 </body>
 </html>
