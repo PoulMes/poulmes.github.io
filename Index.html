@@ -8,24 +8,36 @@
     body { font-family: Arial; text-align: center; margin-top: 50px; }
     h1 { font-size: 24px; }
     p { font-size: 20px; color: #333; }
+    button { font-size: 18px; padding: 10px 20px; margin-top: 20px; cursor: pointer; }
   </style>
 </head>
 <body>
   <h1>Ваш Telegram ID:</h1>
   <p id="userId">Загрузка...</p>
+  <button id="sendBtn">Отправить ID боту</button>
 
   <script>
-    // Получаем объект Telegram WebApp
+    // Инициализация Telegram WebApp
     const tg = window.Telegram.WebApp;
+    tg.expand(); // расширяем WebApp до полного экрана
 
-    // Берём данные пользователя
+    // Получаем данные пользователя
     const user = tg.initDataUnsafe.user;
+    const userId = user ? user.id : null;
 
-    if(user) {
-      document.getElementById('userId').textContent = user.id;
+    if(userId) {
+      document.getElementById('userId').textContent = userId;
     } else {
       document.getElementById('userId').textContent = "Не удалось получить ID";
     }
+
+    // Кнопка отправки сообщения боту
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      if(!userId) return;
+
+      // Отправляем сообщение через метод Telegram WebApp
+      tg.sendData(`ID пользователя: ${userId}`);
+    });
   </script>
 </body>
 </html>
